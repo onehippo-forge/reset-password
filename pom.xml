@@ -71,9 +71,9 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/resetpassword/trunk</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/resetpassword/trunk</developerConnection>
-    <url>https://forge.onehippo.org/svn/resetpassword/trunk</url>
+    <connection>scm:svn:https://forge.onehippo.org/svn/resetpassword/resetpassword/trunk</connection>
+    <developerConnection>scm:svn:https://forge.onehippo.org/svn/resetpassword/resetpassword/trunk</developerConnection>
+    <url>https://forge.onehippo.org/svn/resetpassword/resetpassword/trunk</url>
   </scm>
 
   <issueManagement>
@@ -174,7 +174,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>${plugin.release.version}</version>
         <configuration>
-          <tagBase>https://forge.onehippo.org/svn/resetpassword/tags/</tagBase>
+          <tagBase>https://forge.onehippo.org/svn/resetpassword/resetpassword/tags/</tagBase>
         </configuration>
       </plugin>
       <plugin>
