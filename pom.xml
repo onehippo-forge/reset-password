@@ -2,40 +2,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Hippo Reset Password</name>
-  <description>Hippo Reset Password</description>
-  <groupId>org.onehippo.forge</groupId>
-  <artifactId>resetpassword</artifactId>
-  <version>1.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <url>http://resetpassword.forge.onehippo.org/</url>
+    <parent>
+        <groupId>com.onehippo.cms7</groupId>
+        <artifactId>hippo-cms7-enterprise-release</artifactId>
+        <version>10.2.1</version>
+    </parent>
 
-  <properties>
+    <name>Hippo Reset Password</name>
+    <description>Hippo Reset Password</description>
+    <groupId>org.onehippo.forge</groupId>
+    <artifactId>resetpassword</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <url>http://resetpassword.forge.onehippo.org/</url>
 
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.javaVersion>1.8</project.build.javaVersion>
+    <properties>
 
-    <plugin.compiler.version>3.1</plugin.compiler.version>
-    <plugin.clean.version>2.5</plugin.clean.version>
-    <plugin.deploy.version>2.8.1</plugin.deploy.version>
-    <plugin.install.version>2.5.1</plugin.install.version>
-    <plugin.jar.version>2.4</plugin.jar.version>
-    <plugin.release.version>2.5</plugin.release.version>
-    <plugin.resources.version>2.6</plugin.resources.version>
-    <plugin.site.version>3.4</plugin.site.version>
-    <plugin.source.version>2.2.1</plugin.source.version>
-    <plugin.surefire.version>2.17</plugin.surefire.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.javaVersion>1.8</project.build.javaVersion>
 
-    <commons-email.version>1.3.3</commons-email.version>
-    <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
+        <plugin.compiler.version>3.1</plugin.compiler.version>
+        <plugin.clean.version>2.5</plugin.clean.version>
+        <plugin.deploy.version>2.8.1</plugin.deploy.version>
+        <plugin.install.version>2.5.1</plugin.install.version>
+        <plugin.jar.version>2.4</plugin.jar.version>
+        <plugin.release.version>2.5</plugin.release.version>
+        <plugin.resources.version>2.6</plugin.resources.version>
+        <plugin.site.version>3.4</plugin.site.version>
+        <plugin.source.version>2.2.1</plugin.source.version>
+        <plugin.surefire.version>2.17</plugin.surefire.version>
 
-    <!--Versions normally registered in hippo parent pom-->
-    <hippo.cms.version>3.2.1</hippo.cms.version>
-    <hippo.repository.version>3.2.3</hippo.repository.version>
-    <hippo.services.version>2.2.0</hippo.services.version>
-    <jackrabbit.version>2.10.1</jackrabbit.version>
-    <javax.jcr.version>2.0</javax.jcr.version>
-  </properties>
+        <commons-email.version>1.3.3</commons-email.version>
+        <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
+
+        <!--&lt;!&ndash;Versions normally registered in hippo parent pom&ndash;&gt;-->
+        <!--<hippo.cms.version>3.2.1</hippo.cms.version>-->
+        <!--<hippo.repository.version>3.2.3</hippo.repository.version>-->
+        <!--<hippo.services.version>2.2.0</hippo.services.version>-->
+        <!--<jackrabbit.version>2.10.1</jackrabbit.version>-->
+        <!--<javax.jcr.version>2.0</javax.jcr.version>-->
+    </properties>
 
   <licenses>
     <license>
@@ -63,7 +69,6 @@
       <email>k.vanderweijden @ onehippo . com</email>
       <organization>Hippo</organization>
       <roles>
-        <role>Project Lead</role>
         <role>Java Developer</role>
       </roles>
       <timezone>+1</timezone>
