@@ -142,14 +142,14 @@ public class ResetPasswordPanel extends Panel {
                 if (resetPassword(session)) {
                     resetSuccess = true;
                 }
-            } catch (final PathNotFoundException pnfe) {
-                LOGGER.error("Unknown username: " + userId, pnfe);
-                error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
+            } catch (final PathNotFoundException ignore) {
+                LOGGER.info("Unknown username: " + userId);
+                info(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
             } catch (final EmailException e) {
-                LOGGER.error("Sending mail failed: " + e);
+                LOGGER.error("Sending mail failed.", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } catch (final RepositoryException re) {
-                LOGGER.error("RepositoryException: ", re);
+                LOGGER.error("RepositoryException.", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } finally {
                 if (session != null) {
