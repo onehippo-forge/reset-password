@@ -118,7 +118,7 @@ public class SetPasswordPanel extends Panel {
             loginLink = new WebMarkupContainer("loginLink");
             loginLink.add(new Label("login.link.text", labelMap.get(Configuration.LOGIN_LINK_TEXT)));
             loginLink.setVisible(false);
-            setPasswordFormTable.add(loginLink);
+            add(loginLink);
 
             final Link<Void> resetLink = new Link<Void>("resetLink") {
 
