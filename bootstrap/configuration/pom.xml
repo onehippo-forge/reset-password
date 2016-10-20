@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.forge</groupId>
     <artifactId>resetpassword-bootstrap</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
 
   <name>Reset Password Configuration</name>
