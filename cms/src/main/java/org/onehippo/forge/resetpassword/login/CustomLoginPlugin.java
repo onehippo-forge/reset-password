@@ -27,8 +27,6 @@ import java.util.List;
 
 public class CustomLoginPlugin extends LoginPlugin {
 
-    private static final long serialVersionUID = 1L;
-
     public CustomLoginPlugin(final IPluginContext context, final IPluginConfig config) {
         super(context, config);
     }
@@ -41,10 +39,9 @@ public class CustomLoginPlugin extends LoginPlugin {
 
     class CustomLoginForm extends LoginPanel {
 
-        private static final long serialVersionUID = 1L;
-
         public CustomLoginForm(final String id, final boolean autoComplete, final List<String> locales, final LoginHandler handler) {
             super(id, autoComplete, locales, handler);
+            form.addLabelledComponent(new Label("forgot-password-label", new ResourceModel("forgot.password.label")));
         }
 
         @Override

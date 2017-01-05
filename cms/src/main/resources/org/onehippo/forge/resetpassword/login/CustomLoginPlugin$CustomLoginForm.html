@@ -18,7 +18,10 @@
 <wicket:panel>
     <wicket:extend>
         <div class="hippo-login-form-label">
-            <label><a href="/cms/resetpassword" class="pn-link"><wicket:message key="forgot-password-label">Forgot password?</wicket:message></a></label>
+            <a href="/cms/resetpassword" class="pn-link">
+                <label wicket:id="forgot-password-label"></label>
+                <!--<wicket:message key="forgot-password-label">Forgot password?</wicket:message>-->
+            </a>
         </div>
     </wicket:extend>
 </wicket:panel>

@@ -22,6 +22,7 @@
     </organization>
 
     <properties>
+        <hippo.cms.version>3.2.6-SNAPSHOT</hippo.cms.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.javaVersion>1.8</project.build.javaVersion>

@@ -34,6 +34,8 @@ cms/src/main/resources/org/onehippo/forge/resetpassword/frontend/ResetPassword_n
 cms/src/main/resources/org/onehippo/forge/resetpassword/frontend/SetPasswordPanel.html -text
 cms/src/main/resources/org/onehippo/forge/resetpassword/login/CustomLoginPlugin$CustomLoginForm.html -text
 cms/src/main/resources/org/onehippo/forge/resetpassword/login/CustomLoginPlugin.properties -text
+cms/src/main/resources/org/onehippo/forge/resetpassword/login/CustomLoginPlugin_de.properties -text
+cms/src/main/resources/org/onehippo/forge/resetpassword/login/CustomLoginPlugin_fr.properties -text
 cms/src/main/resources/org/onehippo/forge/resetpassword/login/CustomLoginPlugin_nl.properties -text
 /pom.xml -text
 src/site/site.xml -text
