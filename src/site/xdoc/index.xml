@@ -27,6 +27,9 @@
                 This project provides basic reset password functionality.
             </p>
         </section>
+        <section name="Code base on GitHub">
+            <p>The code of this project is on GitHub at <a href="https://github.com/onehippo-forge/reset-password/">https://github.com/onehippo-forge/reset-password/</a>.</p>
+        </section>
         <section name="Installation">
             <subsection name="Add dependencies">
                 <p>To use this plugin add a plugin version to your main pom properties and add the following

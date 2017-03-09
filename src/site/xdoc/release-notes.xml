@@ -30,16 +30,31 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
-          <td>1.x.x</td>
-          <td>10.x.x</td>
+          <td>1.x</td>
+          <td>10.2.x</td>
         </tr>
       </table>
     </section>
-    <section name="Release Notes (1.x.x)">
-      <subsection name="1.1.0">
+    <section name="Release Notes">
+      <subsection name="1.2">
+        <p class="smallinfo">Release Date: 20 October 2016</p>
+        <ul>
+          <li>Move loginLink to fix visibility of the link.</li>
+          <li>Minor upgrade to Hippo 10.2.2</li>
+        </ul>
+      </subsection>
+      <subsection name="1.1">
+        <p class="smallinfo">Release Date: 23 September 2016</p>
+        <ul>
+          <li>Cleaned up error messages when username unknown.</li>
+          <li>Dependency optimizations.</li>
+        </ul>
+      </subsection>
+      <subsection name="1.0">
+        <p class="smallinfo">Release Date: 8 September 2016</p>
         <ul>
           <li>
-            Initial Release for 10.2.x
+            Initial Release for Hippo 10.2.
           </li>
         </ul>
       </subsection>
