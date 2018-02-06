@@ -15,6 +15,17 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.wicket.AttributeModifier;
@@ -29,22 +40,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.Url;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * ResetPasswordPanel
@@ -60,8 +62,6 @@ public class ResetPasswordPanel extends Panel {
     private static final String PASSWORD_RESET_KEY = "passwordResetKey";
     private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
     private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
-    private static final String HST_HOSTS_PATH = "/hst:hst/hst:hosts";
-    private static final String FRONTEND_HOST_NAME = "frontendHostName";
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private static final String SPACE = " ";
@@ -260,21 +260,17 @@ public class ResetPasswordPanel extends Panel {
 
         private String getUrl(final Session session, final String code) throws RepositoryException {
             // generate reset url
-            String frontendHostName = null;
-            final Node hstHostNode;
-            hstHostNode = session.getNode(HST_HOSTS_PATH);
-            if (hstHostNode.hasProperty(FRONTEND_HOST_NAME)) {
-                frontendHostName = hstHostNode.getProperty(FRONTEND_HOST_NAME).getString();
+            Url url = getRequest().getUrl();
+            String protocol = url.getProtocol();
+            int port = url.getPort();
+            String frontendHostName = protocol + "://" + url.getHost();
+            if (!(("http".equals(protocol) && port == 80) ||
+                    ("https".equals(protocol) && port == 443))) {
+                frontendHostName += ":" + port;
             }
 
-            if (StringUtils.isEmpty(frontendHostName)) {
-                LOGGER.error("Unknown frontendHostName");
-                error(labelMap.get(Configuration.SYSTEM_ERROR));
-                throw new IllegalArgumentException("");
-            }
-
-            return frontendHostName +
-                    "/cms/resetpassword?code=" +
+            return frontendHostName + getRequest().getContextPath() +
+                    "/resetpassword?code=" +
                     code +
                     "&uid=" +
                     userId;

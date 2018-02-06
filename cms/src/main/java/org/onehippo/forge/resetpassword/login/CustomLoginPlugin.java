@@ -15,17 +15,17 @@
  */
 package org.onehippo.forge.resetpassword.login;
 
+import java.util.List;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
+import org.hippoecm.frontend.plugins.login.DefaultLoginPlugin;
 import org.hippoecm.frontend.plugins.login.LoginHandler;
 import org.hippoecm.frontend.plugins.login.LoginPanel;
-import org.hippoecm.frontend.plugins.login.LoginPlugin;
 
-import java.util.List;
-
-public class CustomLoginPlugin extends LoginPlugin {
+public class CustomLoginPlugin extends DefaultLoginPlugin {
 
     public CustomLoginPlugin(final IPluginContext context, final IPluginConfig config) {
         super(context, config);
