@@ -32,7 +32,7 @@
         <plugin.jar.version>2.4</plugin.jar.version>
         <plugin.release.version>2.5</plugin.release.version>
         <plugin.resources.version>2.6</plugin.resources.version>
-        <plugin.site.version>3.4</plugin.site.version>
+        <plugin.site.version>3.6</plugin.site.version>
         <plugin.source.version>2.2.1</plugin.source.version>
         <plugin.surefire.version>2.17</plugin.surefire.version>
 
@@ -50,8 +50,8 @@
 
   <distributionManagement>
     <repository>
-      <name>Hippo Maven 2 Repository</name>
-      <id>hippo-maven2</id>
+      <name>Hippo Maven 2 Forge Repository</name>
+      <id>hippo-maven2-forge</id>
       <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
     </repository>
@@ -184,9 +184,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>${plugin.site.version}</version>
-        <configuration>
-          <outputDirectory>docs</outputDirectory>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -204,5 +201,23 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <!-- For generating/publishing GitHub Site Pages into /docs/ folder on master branch only -->
+      <id>github.pages</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <outputDirectory>docs</outputDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

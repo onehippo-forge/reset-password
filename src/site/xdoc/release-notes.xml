@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016 Hippo
+    Copyright 2016-2018 Hippo
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -30,12 +30,22 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
+          <td>2.x</td>
+          <td>11.2.x</td>
+        </tr>
+        <tr>
           <td>1.x</td>
           <td>10.2.x</td>
         </tr>
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="2.0">
+        <p class="smallinfo">Release Date: 6 March 2018</p>
+        <ul>
+          <li>Upgrade to Hippo 11.2</li>
+        </ul>
+      </subsection>
       <subsection name="1.2">
         <p class="smallinfo">Release Date: 20 October 2016</p>
         <ul>
