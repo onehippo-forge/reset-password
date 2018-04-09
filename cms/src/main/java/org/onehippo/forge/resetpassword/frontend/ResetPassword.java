@@ -15,6 +15,15 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.servlet.http.Cookie;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -35,15 +44,9 @@ import org.hippoecm.frontend.plugins.login.LoginPlugin;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
+import org.hippoecm.frontend.util.WebApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * ResetPassword class for all Wicket based front-end code.
@@ -138,6 +141,10 @@ public class ResetPassword extends RenderPlugin {
 
     private Configuration getCustomPluginUserSession() {
         final CustomPluginUserSession userSession = CustomPluginUserSession.get();
+        final String cookieValue = getCookieValue(CustomPluginUserSession.LOCALE_COOKIE);
+        if(cookieValue != null) {
+            userSession.setLocale(new Locale(cookieValue));
+        }
         Session session = null;
 
         try {
@@ -153,8 +160,18 @@ public class ResetPassword extends RenderPlugin {
                 userSession.removeResetPasswordSession();
             }
         }
-        // set locale to NL
-        userSession.setLocale(new Locale("NL"));
+        return null;
+    }
+
+    protected String getCookieValue(final String cookieName) {
+        Cookie[] cookies = WebApplicationHelper.retrieveWebRequest().getContainerRequest().getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
         return null;
     }
 }
