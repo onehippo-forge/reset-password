@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -92,6 +93,7 @@ public class ResetPasswordPanel extends Panel {
     protected class ResetPasswordForm extends Form {
 
         private static final long serialVersionUID = 1L;
+        private static final String HST_CMSLOCATION = "hst:cmslocation";
 
         private final FeedbackPanel feedback;
         private final WebMarkupContainer resetPasswordFormTable;
@@ -263,9 +265,9 @@ public class ResetPasswordPanel extends Panel {
         }
 
         private String getUrl(final Session session, final String code) {
-            String frontendHostName = getLocationHeaderOrigin();
+            final String frontendHostName = getLocationHeaderOrigin();
 
-            return frontendHostName + getRequest().getContextPath() +
+            return frontendHostName + getConfiguredContextPath(frontendHostName, getRequest().getContextPath()) +
                     "/resetpassword?code=" +
                     code +
                     "&uid=" +
@@ -274,18 +276,18 @@ public class ResetPasswordPanel extends Panel {
 
         /**
          * Creates a RFC-6454 comparable origin from the {@code request} requested resource.
-         *
+         * <p>
          * // stole logic from org.hippoecm.frontend.http.CsrfPreventionRequestCycleListener#getLocationHeaderOrigin(javax.servlet.http.HttpServletRequest)
          *
          * @return only the scheme://host[:port] part, or {@code null} when the origin string is not
-         *         compliant
+         * compliant
          */
         private String getLocationHeaderOrigin() {
-            HttpServletRequest request = WebApplicationHelper.retrieveWebRequest().getContainerRequest();
+            final HttpServletRequest request = WebApplicationHelper.retrieveWebRequest().getContainerRequest();
 
             String host = request.getHeader("X-Forwarded-Host");
             if (host != null) {
-                String[] hosts = host.split(",");
+                final String[] hosts = host.split(",");
                 final String location = getFarthestRequestScheme(request) + "://" + hosts[0];
                 LOGGER.debug("X-Forwarded-Host header found. Return location '{}'", location);
                 return location;
@@ -311,19 +313,44 @@ public class ResetPasswordPanel extends Panel {
                 return null;
             }
 
-            StringBuilder target = new StringBuilder();
+            final StringBuilder target = new StringBuilder();
             target.append(scheme)
                     .append("://")
                     .append(host);
 
-            int port = request.getServerPort();
+            final int port = request.getServerPort();
             if ("http".equals(scheme) && port != 80 || "https".equals(scheme) && port != 443) {
                 target.append(':')
-                .append(port);
+                        .append(port);
             }
             LOGGER.debug("Host '{}' from request.serverName is used because no 'Host' or 'X-Forwarded-Host' header found. " +
                     "Return location '{}'", target.toString());
             return target.toString();
+        }
+
+        private String getConfiguredContextPath(final String hostname, final String defaultContextPath) {
+            final CustomPluginUserSession userSession = CustomPluginUserSession.get();
+            Session resetPasswordSession = userSession.getResetPasswordSession();
+            try {
+                final Node hosts = resetPasswordSession.getNode("/hst:hst/hst:hosts");
+                final NodeIterator nodeIterator = hosts.getNodes();
+                while (nodeIterator.hasNext()) {
+                    final Node hostGroup = nodeIterator.nextNode();
+                    if (hostGroup.hasProperty(HST_CMSLOCATION)) {
+                        final String location = hostGroup.getProperty(HST_CMSLOCATION).getString();
+                        if (location.contains(hostname)) {
+                            return StringUtils.substringAfter(location, hostname);
+                        }
+                    }
+                }
+
+            } catch (final RepositoryException e) {
+                LOGGER.error("Well something broke", e);
+                //Errors break the flow, but we need this session elsewhere so only on Exceptions do we close it here.
+                resetPasswordSession.logout();
+                userSession.removeResetPasswordSession();
+            }
+            return defaultContextPath;
         }
 
         private String getUserName(final Node userNode) throws RepositoryException {
