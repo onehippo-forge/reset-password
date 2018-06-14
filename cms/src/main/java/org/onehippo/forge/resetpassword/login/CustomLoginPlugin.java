@@ -17,8 +17,6 @@ package org.onehippo.forge.resetpassword.login;
 
 import java.util.List;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.ResourceModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugins.login.DefaultLoginPlugin;
@@ -41,7 +39,6 @@ public class CustomLoginPlugin extends DefaultLoginPlugin {
 
         public CustomLoginForm(final String id, final boolean autoComplete, final List<String> locales, final LoginHandler handler) {
             super(id, autoComplete, locales, handler);
-            form.addLabelledComponent(new Label("forgot-password-label", new ResourceModel("forgot.password.label")));
         }
 
         @Override
