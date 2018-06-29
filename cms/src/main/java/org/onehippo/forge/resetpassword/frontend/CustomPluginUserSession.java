@@ -15,6 +15,10 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.QueryManager;
+
 import org.apache.wicket.request.Request;
 import org.hippoecm.frontend.PluginApplication;
 import org.hippoecm.frontend.model.JcrSessionModel;
@@ -24,10 +28,6 @@ import org.hippoecm.repository.api.HippoNode;
 import org.onehippo.repository.security.JvmCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.QueryManager;
 
 /**
  * CustomPluginUserSession
@@ -44,6 +44,8 @@ public class CustomPluginUserSession extends PluginUserSession {
 
     private static final String USER_RESETPASSWORD = "resetpassword";
     private Session currentSession;
+    public static final String LOCALE_COOKIE = "loc";
+    public static final int LOCALE_COOKIE_MAXAGE = 365 * 24 * 3600; // expire one year from now
 
     /**
      * Constructor to create new session.
