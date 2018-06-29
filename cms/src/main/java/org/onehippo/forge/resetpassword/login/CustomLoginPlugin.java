@@ -17,8 +17,10 @@ package org.onehippo.forge.resetpassword.login;
 
 import java.util.List;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugins.login.DefaultLoginPlugin;
@@ -28,6 +30,8 @@ import org.onehippo.forge.resetpassword.frontend.CustomPluginUserSession;
 
 public class CustomLoginPlugin extends DefaultLoginPlugin {
 
+    private static final ResourceReference loginCss = new CssResourceReference(CustomLoginPlugin.class, "login_resetpassword.css");
+
     public CustomLoginPlugin(final IPluginContext context, final IPluginConfig config) {
         super(context, config);
     }
@@ -36,6 +40,12 @@ public class CustomLoginPlugin extends DefaultLoginPlugin {
     protected LoginPanel createLoginPanel(final String id, final boolean autoComplete, final List<String> locales,
                                           final LoginHandler handler) {
         return new CustomLoginForm(id, autoComplete, locales, handler);
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(CssHeaderItem.forReference(loginCss));
     }
 
     class CustomLoginForm extends LoginPanel {
