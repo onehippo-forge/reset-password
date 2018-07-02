@@ -15,6 +15,15 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -30,6 +39,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.hippoecm.frontend.model.JcrNodeModel;
+import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationServiceImpl;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
@@ -37,14 +48,6 @@ import org.hippoecm.frontend.plugins.cms.admin.users.User;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 /**
  * SetPasswordPanel
@@ -57,9 +60,11 @@ public class SetPasswordPanel extends Panel {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetPasswordPanel.class);
+    public static final String PASSWORDVALIDATION_LOCATION = "passwordvalidation.location";
     private static final String PASSWORD_RESET_KEY = "passwordResetKey";
     private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
     private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
+    private final IPasswordValidationService passwordValidationService;
 
     private final Map<String, String> labelMap;
 
@@ -79,13 +84,15 @@ public class SetPasswordPanel extends Panel {
 
         add(CssClass.append("hippo-login-panel-center"));
         add(new SetPasswordForm(panelInfo, code, resetPasswordPanel));
+        String passwordValidationLocation = panelInfo.getConfig().get(PASSWORDVALIDATION_LOCATION).toString();
+        JcrPluginConfig pluginConfig = new JcrPluginConfig(new JcrNodeModel(passwordValidationLocation));
+        passwordValidationService = new PasswordValidationServiceImpl(panelInfo.getContext(), pluginConfig);
+
     }
 
     protected class SetPasswordForm extends Form {
 
         private static final long serialVersionUID = 1L;
-
-        private final IPasswordValidationService passwordValidationService;
 
         private final String code;
         private final String uid;
@@ -104,8 +111,6 @@ public class SetPasswordPanel extends Panel {
             super("setPasswordForm");
             this.code = code;
             uid = panelInfo.getUserId();
-
-            passwordValidationService = new PasswordValidationServiceImpl(panelInfo.getContext(), panelInfo.getConfig());
 
             createPasswordFormTable(panelInfo.isAutoComplete());
             add(setPasswordFormTable);
