@@ -5,7 +5,7 @@
     <parent>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms7-release</artifactId>
-      <version>11.2.4</version>
+      <version>12.6.1</version>
     </parent>
 
     <name>Hippo Reset Password</name>
@@ -22,9 +22,7 @@
     </organization>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.javaVersion>1.8</project.build.javaVersion>
-
+        <jackrabbit.version>2.16.2-h3</jackrabbit.version>
         <plugin.compiler.version>3.1</plugin.compiler.version>
         <plugin.clean.version>2.5</plugin.clean.version>
         <plugin.deploy.version>2.8.1</plugin.deploy.version>
@@ -38,6 +36,8 @@
 
         <commons-email.version>1.3.3</commons-email.version>
         <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.build.javaVersion>1.8</project.build.javaVersion>
 
     </properties>
 
@@ -129,6 +129,40 @@
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
         <version>${essentials.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-api</artifactId>
+        <version>${jackrabbit.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>2.4.5</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.jcr</groupId>
+        <artifactId>jcr</artifactId>
+        <version>${javax.jcr.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-repository-api</artifactId>
+        <version>${hippo.repository.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-services</artifactId>
+        <version>${hippo.services.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-javamail_1.4_spec</artifactId>
+        <version>${geronimo.javamail.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
