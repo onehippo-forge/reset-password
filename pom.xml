@@ -39,6 +39,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.build.javaVersion>1.8</project.build.javaVersion>
 
+      <jackson-jaxrs-json-provider.version>2.4.5</jackson-jaxrs-json-provider.version>
     </properties>
 
   <scm>
@@ -125,21 +126,24 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- TODO mm check if provided-->
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jackson-jaxrs-json-provider.version}</version>
+      </dependency>
+      <!-- TODO mm check if needed-->
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
         <version>${essentials.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-api</artifactId>
         <version>${jackrabbit.version}</version>
         <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.jaxrs</groupId>
-        <artifactId>jackson-jaxrs-json-provider</artifactId>
-        <version>2.4.5</version>
       </dependency>
       <dependency>
         <groupId>javax.jcr</groupId>
@@ -151,6 +155,7 @@
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-repository-api</artifactId>
         <version>${hippo.repository.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
