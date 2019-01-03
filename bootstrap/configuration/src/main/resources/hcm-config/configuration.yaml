@@ -1,0 +1,13 @@
+definitions:
+  config:
+    /hippo:configuration:
+      /hippo:security:
+        hipposys:passwordmaxagedays: 90
+      /..:
+        /..:
+          /..:
+            /hippo:configuration:
+              hipposys:members:
+                operation: add
+                type: string
+                value: [resetpassword]

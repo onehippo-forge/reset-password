@@ -1,0 +1,5 @@
+group: hippo-cms
+project:
+  name: reste-password
+  after: hippo-cms
+module: reste-password-content
