@@ -30,7 +30,7 @@ import javax.naming.NamingException;
  */
 public class MailServiceImpl implements MailService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
 
     private static final String DEFAULT_MAIL_SESSION = "mail/Session";
 
@@ -72,14 +72,14 @@ public class MailServiceImpl implements MailService {
             final Context context = (Context) initialContext.lookup("java:comp/env");
             return (Session) context.lookup(sessionName);
         } catch (final NamingException e) {
-            LOGGER.error("Error creating email session: " + sessionName, e);
+            log.error("Error creating email session: {}", sessionName, e);
             try {
                 if (initialContext != null) {
                     initialContext.close();
                 }
             } catch (final NamingException exception) {
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.error("Error finding context", exception);
+                if (log.isDebugEnabled()) {
+                    log.error("Error finding context", exception);
                 }
             }
         }

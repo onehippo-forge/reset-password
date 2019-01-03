@@ -59,7 +59,7 @@ public class SetPasswordPanel extends Panel {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SetPasswordPanel.class);
+    private static final Logger log = LoggerFactory.getLogger(SetPasswordPanel.class);
     public static final String PASSWORDVALIDATION_LOCATION = "passwordvalidation.location";
     private static final String PASSWORD_RESET_KEY = "passwordResetKey";
     private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
@@ -184,7 +184,7 @@ public class SetPasswordPanel extends Panel {
                     }
                 }
             } catch (final RepositoryException re) {
-                LOGGER.error("Error validating SetPasswordForm", re);
+                log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             }
         }
@@ -206,7 +206,7 @@ public class SetPasswordPanel extends Panel {
 
                 final Node userNode = session.getNode(HIPPO_USERS_PATH + uid);
                 if (userNode == null) {
-                    LOGGER.info("Unknown username: " + uid);
+                    log.info("Unknown username: {}", uid);
                     error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                     return;
                 }
@@ -223,7 +223,7 @@ public class SetPasswordPanel extends Panel {
                 session.save();
 
             } catch (final RepositoryException re) {
-                LOGGER.error("Error saving password SetPasswordForm", re);
+                log.error("Error saving password SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } finally {
                 if (session != null) {
@@ -243,7 +243,7 @@ public class SetPasswordPanel extends Panel {
                     return false;
                 }
             } catch (final RepositoryException re) {
-                LOGGER.error("Error validating SetPasswordForm", re);
+                log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
                 return false;
             } finally {
@@ -263,15 +263,15 @@ public class SetPasswordPanel extends Panel {
                 validateTimestamp(uid, userNode);
 
             } catch (final PathNotFoundException pnfe) {
-                LOGGER.error("Unknown username: " + uid, pnfe);
+                log.error("Unknown username: {}", uid, pnfe);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordException rpe) {
-                LOGGER.info("Error handling verification url: " + rpe);
+                log.info("Error handling verification url: {}", rpe);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordLinkExpiredException rpplee) {
-                LOGGER.info("Error handling verification url: " + rpplee);
+                log.info("Error handling verification url: {}", rpplee);
                 error(labelMap.get(Configuration.RESET_LINK_EXPIRED));
                 return true;
             }
