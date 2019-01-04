@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class CustomPluginUserSession extends PluginUserSession {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomPluginUserSession.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomPluginUserSession.class);
 
     private static final String USER_RESETPASSWORD = "resetpassword";
     private Session currentSession;
@@ -105,7 +105,7 @@ public class CustomPluginUserSession extends PluginUserSession {
         try {
             return getResetPasswordSession().getWorkspace().getQueryManager();
         } catch (final RepositoryException re) {
-            LOGGER.error("Error getting queryManager", re);
+            log.error("Error getting queryManager", re);
             return null;
         }
     }
@@ -124,7 +124,7 @@ public class CustomPluginUserSession extends PluginUserSession {
                 result = (HippoNode) jcrSession.getRootNode();
             }
         } catch (final RepositoryException e) {
-            LOGGER.error("RepositoryException", e);
+            log.error("RepositoryException", e);
         }
         return result;
     }

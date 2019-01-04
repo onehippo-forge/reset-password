@@ -4,5 +4,5 @@ definitions:
       jcr:primaryType: hipposys:module
       hipposys:className: org.onehippo.forge.resetpassword.services.mail.EmailModule
       /hippo:moduleconfig:
-        jcr:primaryType: nt:unstructured
+        jcr:primaryType: hipposys:moduleconfig
         mail.jndi.resource.name: mail/Session

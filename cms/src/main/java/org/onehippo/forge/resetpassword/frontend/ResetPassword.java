@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public class ResetPassword extends RenderPlugin {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResetPassword.class);
+    private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
 
     private static final ResourceReference DEFAULT_FAVICON = new UrlResourceReference(
             Url.parse("../skin/images/hippo-cms.ico"));
@@ -153,7 +153,7 @@ public class ResetPassword extends RenderPlugin {
             final Node configNode = session.getNode(configurationPath);
             return new Configuration(configNode);
         } catch (final RepositoryException re) {
-            LOGGER.error("Error trying to fetch configuration node", re);
+            log.error("Error trying to fetch configuration node", re);
         } finally {
             if (session != null) {
                 session.logout();
