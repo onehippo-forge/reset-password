@@ -1,13 +1,4 @@
 definitions:
   config:
-    /hippo:configuration/hippo:frontend/login:
-      /login:
-        /loginPage:
-          plugin.class:
-            operation: override
-            type: string
-            value: org.onehippo.forge.resetpassword.login.CustomLoginPlugin
-          signin.form.autocomplete:
-            operation: override
-            type: boolean
-            value: false
+    /hippo:configuration/hippo:frontend/login/login/loginPage:
+      plugin.class: org.onehippo.forge.resetpassword.login.CustomLoginPlugin
