@@ -52,6 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.hippoecm.frontend.util.RequestUtils.getFarthestRequestScheme;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.HIPPO_USERS_PATH;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_KEY;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_TIMESTAMP;
 
 /**
  * ResetPasswordPanel
@@ -64,9 +67,7 @@ public class ResetPasswordPanel extends Panel {
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordPanel.class);
 
-    private static final String PASSWORD_RESET_KEY = "passwordResetKey";
-    private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
-    private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
+
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private static final String SPACE = " ";
@@ -191,18 +192,18 @@ public class ResetPasswordPanel extends Panel {
                 hippoUserActive = userNode.getProperty("hipposys:active").getBoolean();
             }
             if (!hippoUserActive) {
-                log.error("User is not active: " + userId);
+                log.error("User is not active: {}", userId);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return false;
             }
-
+            
             String hippoUserEmail = null;
             if (userNode.hasProperty("hipposys:email")) {
                 hippoUserEmail = userNode.getProperty("hipposys:email").getString();
             }
 
             if (StringUtils.isEmpty(hippoUserEmail)) {
-                log.error("Unknown e-mail: " + userId);
+                log.error("Unknown e-mail: {}", userId);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return false;
             }
@@ -213,9 +214,8 @@ public class ResetPasswordPanel extends Panel {
             final Calendar dateNow = Calendar.getInstance();
             final Calendar currentDate = (Calendar) dateNow.clone();
             final String mailText = getMailText(session, code, username, dateNow);
-
             sendEmail(hippoUserEmail, username, mailText);
-
+            log.debug("Sending mail link to user: {}", mailText);
             // persist code and exp.date
             // Node should be relaxed before adding extra properties
             if (userNode.canAddMixin("hippostd:relaxed")) {

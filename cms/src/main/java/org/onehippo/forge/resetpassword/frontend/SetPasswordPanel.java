@@ -49,6 +49,11 @@ import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.HIPPO_USERS_PATH;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORDVALIDATION_LOCATION;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_KEY;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_TIMESTAMP;
+
 /**
  * SetPasswordPanel
  * Panel on ResetPasswordFrame, showing two fields for entering the new password twice
@@ -60,10 +65,7 @@ public class SetPasswordPanel extends Panel {
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = LoggerFactory.getLogger(SetPasswordPanel.class);
-    public static final String PASSWORDVALIDATION_LOCATION = "passwordvalidation.location";
-    private static final String PASSWORD_RESET_KEY = "passwordResetKey";
-    private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
-    private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
+
     private final IPasswordValidationService passwordValidationService;
 
     private final Map<String, String> labelMap;
