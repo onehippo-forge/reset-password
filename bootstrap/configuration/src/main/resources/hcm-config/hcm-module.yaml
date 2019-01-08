@@ -2,4 +2,4 @@ group: hippo-cms
 project:
   name: reset-password
   after: hippo-cms
-module: reset-password-content
+module: reset-password-configuration
