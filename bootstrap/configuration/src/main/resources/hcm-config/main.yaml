@@ -1,0 +1,8 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:groups/admin:
+      hipposys:members:
+        operation: add
+        type: string
+        value: [resetpassword]
+
