@@ -34,12 +34,23 @@
           <td>11.2.x</td>
         </tr>
         <tr>
+          <td>3.x</td>
+          <td>12.x.x</td>
+        </tr>
+        <tr>
           <td>1.x</td>
           <td>10.2.x</td>
         </tr>
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="3.0">
+        <p class="smallinfo">Release Date: TODO January 2019</p>
+        <ul>
+          <li>Upgrade to Hippo 12.x</li>
+          <li>Added essentials plugin</li>
+        </ul>
+      </subsection>
       <subsection name="2.0">
         <p class="smallinfo">Release Date: 6 March 2018</p>
         <ul>

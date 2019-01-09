@@ -31,6 +31,21 @@
             <p>The code of this project is on GitHub at <a href="https://github.com/bloomreach-forge/reset-password/">https://github.com/bloomreach-forge/reset-password/</a>.</p>
         </section>
         <section name="Installation">
+            <subsection name="Use essentials plugin">
+                <p>In the essentials <code>pom.xml</code> of the project, add following dependency.
+                </p>
+                <div class="brush: xml">
+                    <source><![CDATA[
+     <dependency>
+        <groupId>org.onehippo.forge</groupId>
+        <artifactId>reset-password-essentials</artifactId>
+        <version>3.x TODO</version>
+     </dependency>
+        ]]></source>
+                </div>
+            </subsection>
+
+
 
             <subsection name="Add the Forge repository configuration">
                 <p>In the main <code>pom.xml</code> of the project, in the <code>repositories</code> section, add this repository if it is not configured there yet.</p>
