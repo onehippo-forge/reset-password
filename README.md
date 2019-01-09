@@ -21,3 +21,37 @@ For rendering documentation on non-master branches, use the normal site command 
 and therefore ignored by Git.
 
  > mvn clean site:site
+
+
+ # Development: email testing
+ Use essentials plugin for testing:
+ 
+ ```xml
+     <dependency>
+        <groupId>org.onehippo.forge</groupId>
+        <artifactId>reset-password-essentials</artifactId>
+        <version>2.1-SNAPSHOT</version>       
+     </dependency>
+```
+ 
+add mail session JNDI resource to local context.xml, e.g.:
+ 
+```
+    <Resource name="mail/Session" 
+      auth="Container" 
+      type="javax.mail.Session" 
+      mail.smtp.host="127.0.0.1"
+      mail.smtp.port= "2525"  
+      />
+```
+
+Download  FakeSMTP from:
+
+[https://github.com/Nilhcem/FakeSMTP](https://github.com/Nilhcem/FakeSMTP)
+
+and run it as:
+
+
+```bash
+java -jar fakeSMTP-2.0.jar -s  -p 2525 -a 127.0.0.1
+```

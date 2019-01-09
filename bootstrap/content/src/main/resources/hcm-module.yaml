@@ -1,5 +1,6 @@
-group: hippo-cms
-project:
-  name: reset-password
+group:
+  name: resetpassword
   after: hippo-cms
-module: reset-password-content
+project: resetpassword
+module:
+  name: reset-password-content

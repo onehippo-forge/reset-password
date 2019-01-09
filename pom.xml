@@ -180,10 +180,10 @@
   </dependencyManagement>
 
   <modules>
+    <module>reset-password-essentials</module>
     <module>bootstrap</module>
     <module>cms</module>
   </modules>
-
   <build>
     <defaultGoal>package</defaultGoal>
     <resources>
