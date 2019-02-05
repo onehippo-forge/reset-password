@@ -69,8 +69,8 @@ public class ResetPassword extends RenderPlugin {
     private static final int DEFAULT_URL_VALIDITY_IN_MINUTES = 60;
 
     private static final String EDITION = "edition";
-
     private ResourceReference editionCss;
+
     private final String configurationPath;
 
     /**
@@ -108,10 +108,12 @@ public class ResetPassword extends RenderPlugin {
         add(setPasswordForm);
 
         // In case of using a different edition, add extra CSS rules to show the required styling
+/*  FIXME no login_enterprise.css (yet?)
         if (config.containsKey(EDITION)) {
             final String edition = config.getString(EDITION);
             editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
         }
+*/
 
         final ExternalLink termsAndConditions = new ExternalLink("termsAndConditions", TERMS_AND_CONDITIONS_LINK) {
             private static final long serialVersionUID = 1L;
