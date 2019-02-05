@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.cms7.essentials.resetPasswordPlugin.instructions;
+package org.onehippo.forge.essentials.resetpassword.instructions;
 
 
 import java.io.File;
@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 
 public class AddVersionsInstruction implements Instruction {
 
@@ -60,7 +59,7 @@ public class AddVersionsInstruction implements Instruction {
         }
         final Properties properties = pomModel.getProperties();
 
-            final String key = "reset-password.version";
+            final String key = "bloomreach.forge.reset-password.version";
             final String value = readValueFromText();
             if (!Strings.isNullOrEmpty(key) && !Strings.isNullOrEmpty(value)) {
                 properties.setProperty(key, value);

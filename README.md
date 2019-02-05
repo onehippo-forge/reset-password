@@ -28,9 +28,9 @@ and therefore ignored by Git.
  
  ```xml
      <dependency>
-        <groupId>org.onehippo.forge</groupId>
+        <groupId>org.bloomreach.forge.resetpassword</groupId>
         <artifactId>reset-password-essentials</artifactId>
-        <version>2.1-SNAPSHOT</version>       
+        <version>3.0</version>       
      </dependency>
 ```
  

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class ResetPassword extends RenderPlugin {
     private static final ResourceReference DEFAULT_FAVICON = new UrlResourceReference(
             Url.parse("../skin/images/hippo-cms.ico"));
 
-    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.onehippo.com/tnc";
+    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.onehippo.com/en/about/privacy";
     private static final String PARAM_CODE = "code";
     private static final String PARAM_UID = "uid";
 

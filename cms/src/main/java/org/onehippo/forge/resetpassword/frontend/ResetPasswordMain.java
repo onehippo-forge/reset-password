@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+
 import org.hippoecm.frontend.Main;
+import org.hippoecm.frontend.WhitelistedClassesResourceGuard;
 
 /**
  * Custom class to start wicket code for ResetPassword page.
@@ -35,4 +38,16 @@ public class ResetPasswordMain extends Main {
         return new CustomPluginUserSession(request);
     }
 
+    /**
+     * Add own package to the resource guard
+     */
+    protected IPackageResourceGuard createPackageResourceGuard() {
+        final IPackageResourceGuard guard = super.createPackageResourceGuard();
+
+        if (guard instanceof WhitelistedClassesResourceGuard) {
+            ((WhitelistedClassesResourceGuard) guard).addClassNamePrefixes("org.onehippo.forge.resetpassword.login");
+        }
+
+        return guard;
+    }
 }

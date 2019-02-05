@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.cms7.essentials.resetPasswordPlugin.instructions;
+package org.onehippo.forge.essentials.resetpassword.instructions;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +39,6 @@ public class AddFilterInstruction implements Instruction {
     private static final Map<String, String> initParams = new HashMap<>();
 
     static {
-
         initParams.put("applicationClassName", "org.onehippo.forge.resetpassword.frontend.ResetPasswordMain");
         initParams.put("config", "resetpassword");
         initParams.put("wicket.configuration", "deployment");

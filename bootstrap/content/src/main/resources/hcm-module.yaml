@@ -1,5 +1,5 @@
 group:
-  name: resetpassword
+  name: bloomreach-forge
   after: hippo-cms
 project: resetpassword
 module:

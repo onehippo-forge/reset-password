@@ -14,10 +14,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project name="Hippo CMS Reset Password">
+<project name="BloomReach Experience Manager Reset Password">
 
   <skin>
-    <groupId>org.bloomreach.forge.mavenskin</groupId>
+    <groupId>org.onehippo.forge.mavenskin</groupId>
     <artifactId>forge-maven-skin</artifactId>
     <version>3.0.1</version>
   </skin>

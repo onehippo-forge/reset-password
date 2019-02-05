@@ -3,7 +3,7 @@
         "-//Apache Software Foundation//DTD XDOC 1.0//EN"
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2016 Hippo
+    Copyright 2016-2019 BloomReach Inc. (https://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 -->
 <document>
     <properties>
-        <title>Hippo CMS Reset Password</title>
+        <title>BloomReach Experience Manager Reset Password</title>
     </properties>
     <body>
-        <section name="Hippo CMS Reset Password">
+        <section name="BloomReach Experience Manager Reset Password">
             <p>
                 This project provides basic reset password functionality.
             </p>
@@ -31,29 +31,13 @@
             <p>The code of this project is on GitHub at <a href="https://github.com/bloomreach-forge/reset-password/">https://github.com/bloomreach-forge/reset-password/</a>.</p>
         </section>
         <section name="Installation">
-            <subsection name="Use essentials plugin">
-                <p>In the essentials <code>pom.xml</code> of the project, add following dependency.
-                </p>
-                <div class="brush: xml">
-                    <source><![CDATA[
-     <dependency>
-        <groupId>org.onehippo.forge</groupId>
-        <artifactId>reset-password-essentials</artifactId>
-        <version>3.x TODO</version>
-     </dependency>
-        ]]></source>
-                </div>
-            </subsection>
-
-
-
             <subsection name="Add the Forge repository configuration">
                 <p>In the main <code>pom.xml</code> of the project, in the <code>repositories</code> section, add this repository if it is not configured there yet.</p>
                 <div class="brush: xml">
                     <source><![CDATA[
     <repository>
       <id>hippo-forge</id>
-      <name>Bloomreach Forge maven 2 repository.</name>
+      <name>Bloomreach Forge Maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
       <snapshots>
         <enabled>false</enabled>
@@ -67,106 +51,96 @@
                 </div>
             </subsection>
 
-            <subsection name="Add version property to the project pom">
-                <p>In the main <code>pom.xml</code> of the project, in the properties section, add this property. For the correct version number, check the <a href="release-notes.html">Release Notes</a> page.</p>
+            <subsection name="Method 1: Use Essentials plugin">
+                <p>In the Essentials <code>pom.xml</code> of the project, add following dependency.
+                </p>
+                <div class="brush: xml">
+                    <source><![CDATA[
+     <dependency>
+        <groupId>org.bloomreach.forge.resetpassword</groupId>
+        <artifactId>reset-password-essentials</artifactId>
+        <version>3.0</version>
+     </dependency>
+        ]]></source>
+                </div>
+                <div>Now build and run the project; from Essentials choose the Reset Password feature.</div>
+            </subsection>
+
+            <subsection name="Method 2: manual installation">
+                <h4>Add version property to the project pom</h4>
+                <p>In the main <code>pom.xml</code> of the project, in the properties section, add this property.
+                    For the correct version number, check the <a href="release-notes.html">Release Notes</a> page.</p>
                 <div class="brush: xml">
                     <source><![CDATA[
     <forge.resetpassword.version>version.number</forge.resetpassword.version>
         ]]></source>
                 </div>
-            </subsection>
-
-            <subsection name="Add dependencies">
-                <p>To use this plugin add a plugin version to your main pom properties and add the following
-                    dependencies:
-                </p>
-                <p>/pom.xml
-                    <div class="brush: xml">
-                        <source><![CDATA[
+                <h4>Add dependencies to the CMS</h4>
+                <p>Add the following dependencies to the cms/pom.xml:</p>
+                <div class="brush: xml">
+                    <source><![CDATA[
           <dependency>
-            <groupId>org.onehippo.forge</groupId>
-            <artifactId>resetpassword</artifactId>
-            <version>${forge.resetpassword.version}</version>
-          </dependency>
-          ]]></source>
-                    </div>
-                    This adds the main dependency
-                </p>
-
-                <p>
-                    /bootstrap/configuration/pom.xml
-                    <div class="brush: xml">
-                        <source><![CDATA[
-          <dependency>
-            <groupId>org.onehippo.forge</groupId>
-            <artifactId>resetpassword-bootstrap-configuration</artifactId>
-            <version>${forge.resetpassword.version}</version>
-          </dependency>
-          ]]></source>
-                    </div>
-                    Registers e-mail module, extended login page and the resetpassword functionality.
-                </p>
-
-                <p>
-                    /bootstrap/content/pom.xml
-                    <div class="brush: xml">
-                        <source><![CDATA[
-          <dependency>
-            <groupId>org.onehippo.forge</groupId>
-            <artifactId>resetpassword-bootstrap-content</artifactId>
-            <version>${forge.resetpassword.version}</version>
-          </dependency>
-          ]]></source>
-                    </div>
-                    Adds a content document to the repository at /content/documents/resetpassword/password-reset
-                    containing all labels and duration configuration.
-                </p>
-                <p>
-                    /cms/pom.xml
-                    <div class="brush: xml">
-                        <source><![CDATA[
-          <dependency>
-            <groupId>org.onehippo.forge</groupId>
+            <groupId>org.bloomreach.forge.resetpassword</groupId>
             <artifactId>resetpassword-cms</artifactId>
             <version>${forge.resetpassword.version}</version>
           </dependency>
           ]]></source>
-                    </div>
-                    Add cms functionality.
-                </p>
-            </subsection>
-            <subsection name="Update CMS web.xml">
-                <p>Additionally you need to add the following filter and filter-mapping to the cms web.xml:</p>
-                <p>/cms/src/main/webapp/WEB-INF/web.xml</p>
+                    This adds the main dependency.
+                </div>
                 <div class="brush: xml">
                     <source><![CDATA[
-  <filter>
-    <filter-name>ResetPassword</filter-name>
-    <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-    <init-param>
-      <param-name>applicationClassName</param-name>
-      <param-value>org.onehippo.forge.resetpassword.frontend.ResetPasswordMain</param-value>
-    </init-param>
-    <init-param>
-      <param-name>config</param-name>
-      <param-value>resetpassword</param-value>
-    </init-param>
-    <init-param>
-      <param-name>wicket.configuration</param-name>
-      <param-value>deployment</param-value>
-    </init-param>
-    <init-param>
-      <param-name>repository-address</param-name>
-      <param-value>vm://</param-value>
-    </init-param>
-  </filter>
-
-    <filter-mapping>
-      <filter-name>ResetPassword</filter-name>
-      <url-pattern>/resetpassword/*</url-pattern>
-    </filter-mapping>
+          <dependency>
+            <groupId>org.bloomreach.forge.resetpassword</groupId>
+            <artifactId>resetpassword-bootstrap-configuration</artifactId>
+            <version>${forge.resetpassword.version}</version>
+          </dependency>
           ]]></source>
-                </div>
+                    Registers e-mail module, extended login page and the resetpassword functionality.
+                 </div>
+                <div class="brush: xml">
+                    <source><![CDATA[
+          <dependency>
+            <groupId>org.bloomreach.forge.resetpassword</groupId>
+            <artifactId>resetpassword-bootstrap-content</artifactId>
+            <version>${forge.resetpassword.version}</version>
+          </dependency>
+          ]]></source>
+                Adds a content document to the repository at /content/documents/resetpassword/password-reset
+                containing all labels and duration configuration.
+              </div>
+
+              <h4>Update CMS web.xml</h4>
+              <p>Additionally you need to add the following filter and filter-mapping to the cms web.xml:</p>
+              <p>/cms/src/main/webapp/WEB-INF/web.xml</p>
+              <div class="brush: xml">
+                  <source><![CDATA[
+      <filter>
+        <filter-name>ResetPassword</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>org.onehippo.forge.resetpassword.frontend.ResetPasswordMain</param-value>
+        </init-param>
+        <init-param>
+          <param-name>config</param-name>
+          <param-value>resetpassword</param-value>
+        </init-param>
+        <init-param>
+          <param-name>wicket.configuration</param-name>
+          <param-value>deployment</param-value>
+        </init-param>
+        <init-param>
+          <param-name>repository-address</param-name>
+          <param-value>vm://</param-value>
+        </init-param>
+      </filter>
+
+        <filter-mapping>
+          <filter-name>ResetPassword</filter-name>
+          <url-pattern>/resetpassword/*</url-pattern>
+        </filter-mapping>
+              ]]></source>
+              </div>
             </subsection>
         </section>
     </body>
