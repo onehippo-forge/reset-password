@@ -15,12 +15,10 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
-import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
 import org.hippoecm.frontend.Main;
-import org.hippoecm.frontend.WhitelistedClassesResourceGuard;
 
 /**
  * Custom class to start wicket code for ResetPassword page.
@@ -38,16 +36,4 @@ public class ResetPasswordMain extends Main {
         return new CustomPluginUserSession(request);
     }
 
-    /**
-     * Add own package to the resource guard
-     */
-    protected IPackageResourceGuard createPackageResourceGuard() {
-        final IPackageResourceGuard guard = super.createPackageResourceGuard();
-
-        if (guard instanceof WhitelistedClassesResourceGuard) {
-            ((WhitelistedClassesResourceGuard) guard).addClassNamePrefixes("org.onehippo.forge.resetpassword.login");
-        }
-
-        return guard;
-    }
 }
