@@ -147,22 +147,21 @@ public class ResetPassword extends RenderPlugin {
         if(cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
-        Session session = null;
+        final Session session = userSession.getResetPasswordSession();
 
         try {
-            session = userSession.getResetPasswordSession();
 
             final Node configNode = session.getNode(configurationPath);
             return new Configuration(configNode);
         } catch (final RepositoryException re) {
             log.error("Error trying to fetch configuration node", re);
+            throw new IllegalStateException("Failed to read configuration from resetpassword JCR session");
         } finally {
             if (session != null) {
                 session.logout();
                 userSession.removeResetPasswordSession();
             }
         }
-        return null;
     }
 
     protected String getCookieValue(final String cookieName) {
