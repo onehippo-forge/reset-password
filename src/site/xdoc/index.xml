@@ -51,7 +51,7 @@
                 </div>
             </subsection>
 
-            <subsection name="Method 1: Use Essentials plugin">
+            <subsection name="Method 1: use Essentials plugin">
                 <p>In the Essentials <code>pom.xml</code> of the project, add following dependency.
                 </p>
                 <div class="brush: xml">
@@ -105,13 +105,14 @@
             <version>${forge.resetpassword.version}</version>
           </dependency>
           ]]></source>
-                Adds a content document to the repository at /content/documents/resetpassword/password-reset
-                containing all labels and duration configuration.
-              </div>
-
+                    Adds a content document to the repository at /content/documents/resetpassword/password-reset
+                    containing all labels and duration configuration.
+                </div>
+                <div class="alert alert-info">
+                    Note: before version 3.0, the artifacts' groupId was <code>org.onehippo.forge</code>
+                </div>
               <h4>Update CMS web.xml</h4>
-              <p>Additionally you need to add the following filter and filter-mapping to the cms web.xml:</p>
-              <p>/cms/src/main/webapp/WEB-INF/web.xml</p>
+              <p>Additionally you need to add the following filter and filter-mapping to the CMS' web.xml:</p>
               <div class="brush: xml">
                   <source><![CDATA[
       <filter>
@@ -141,6 +142,13 @@
         </filter-mapping>
               ]]></source>
               </div>
+            </subsection>
+        </section>
+        <section name="After installation">
+            <subsection name="Project's YAML module dependencies">
+                The plugin contains a bootstrapping modules with group "bloomreach-forge".
+                Make sure your project bootstraps later than that, by setting
+                <code>after: [hippo-cms, bloomreach-forge]</code> in the hcm-module.yaml file of the repository-data application module.
             </subsection>
         </section>
     </body>

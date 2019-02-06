@@ -31,25 +31,25 @@
         </tr>
         <tr>
           <td>3.x</td>
-          <td>12.x.x</td>
+          <td>12.6</td>
         </tr>
         <tr>
           <td>2.x</td>
-          <td>11.2.x</td>
+          <td>11.2</td>
         </tr>
         <tr>
           <td>1.x</td>
-          <td>10.2.x</td>
+          <td>10.2</td>
         </tr>
       </table>
     </section>
     <section name="Release Notes">
       <subsection name="3.0">
-        <p class="smallinfo">Release Date: TODO January 2019</p>
+        <p class="smallinfo">Release Date: 7 January 2019</p>
         <ul>
-          <li>Upgrade to Hippo 12.6</li>
-          <li>Rename artifacts to have groupId 'org.bloomreach.forge.resetpassword'</li>
-          <li>Add essentials plugin to easy installation</li>
+          <li>Upgrade to BloomReach Experience 12.6</li>
+          <li>Rename artifacts to have groupId <code>org.bloomreach.forge.resetpassword</code></li>
+          <li>Add Essentials plugin for easy installation</li>
         </ul>
       </subsection>
       <subsection name="2.0">
