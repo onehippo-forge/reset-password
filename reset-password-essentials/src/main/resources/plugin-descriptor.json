@@ -1,0 +1,21 @@
+{
+  "id" : "resetPasswordPlugin",
+  "name" : "Reset Password",
+  "introduction" : "Basic Reset Password functionality",
+  "vendor" : {
+    "name" : "BloomReach Forge",
+    "url" : "https://github.com/bloomreach-forge"
+  },
+  "hasConfiguration" : false,
+  "rebuildAfterInstallation" : true,
+  "installWithParameters" : true,
+  "packageFile" : "/META-INF/resetPasswordPlugin_instructions.xml",
+  "type" : "feature",
+  "icon" : "/essentials/feature/images/resetPasswordPlugin.png",
+  "documentationLink" : "https://bloomreach-forge.github.io/reset-password/",
+  "categories" : {
+    "license" : [ "community" ],
+    "application" : [ "cms" ],
+    "type" : [ "feature" ]
+  }
+}

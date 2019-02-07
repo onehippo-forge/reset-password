@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import javax.jcr.Session;
 @ProvidesService(types = MailService.class)
 public class EmailModule extends AbstractReconfigurableDaemonModule {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailModule.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailModule.class);
     private String mailSessionName;
     private MailService mailService;
 
@@ -45,7 +45,7 @@ public class EmailModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doInitialize(final Session session) throws RepositoryException {
-        LOGGER.info("Initialized mail module");
+        log.info("Initialized mail module");
         mailService = new MailServiceImpl();
         mailService.setMailSessionName(mailSessionName);
         HippoServiceRegistry.registerService(mailService, MailService.class);

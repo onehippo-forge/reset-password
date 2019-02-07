@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,6 +14,15 @@
  *  limitations under the License.
  */
 package org.onehippo.forge.resetpassword.frontend;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -30,6 +39,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.hippoecm.frontend.model.JcrNodeModel;
+import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationServiceImpl;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
@@ -38,13 +49,10 @@ import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.HIPPO_USERS_PATH;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORDVALIDATION_LOCATION;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_KEY;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_TIMESTAMP;
 
 /**
  * SetPasswordPanel
@@ -56,10 +64,9 @@ public class SetPasswordPanel extends Panel {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SetPasswordPanel.class);
-    private static final String PASSWORD_RESET_KEY = "passwordResetKey";
-    private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
-    private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
+    private static final Logger log = LoggerFactory.getLogger(SetPasswordPanel.class);
+
+    private final IPasswordValidationService passwordValidationService;
 
     private final Map<String, String> labelMap;
 
@@ -79,13 +86,15 @@ public class SetPasswordPanel extends Panel {
 
         add(CssClass.append("hippo-login-panel-center"));
         add(new SetPasswordForm(panelInfo, code, resetPasswordPanel));
+        String passwordValidationLocation = panelInfo.getConfig().get(PASSWORDVALIDATION_LOCATION).toString();
+        JcrPluginConfig pluginConfig = new JcrPluginConfig(new JcrNodeModel(passwordValidationLocation));
+        passwordValidationService = new PasswordValidationServiceImpl(panelInfo.getContext(), pluginConfig);
+
     }
 
     protected class SetPasswordForm extends Form {
 
         private static final long serialVersionUID = 1L;
-
-        private final IPasswordValidationService passwordValidationService;
 
         private final String code;
         private final String uid;
@@ -104,8 +113,6 @@ public class SetPasswordPanel extends Panel {
             super("setPasswordForm");
             this.code = code;
             uid = panelInfo.getUserId();
-
-            passwordValidationService = new PasswordValidationServiceImpl(panelInfo.getContext(), panelInfo.getConfig());
 
             createPasswordFormTable(panelInfo.isAutoComplete());
             add(setPasswordFormTable);
@@ -179,7 +186,7 @@ public class SetPasswordPanel extends Panel {
                     }
                 }
             } catch (final RepositoryException re) {
-                LOGGER.error("Error validating SetPasswordForm", re);
+                log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             }
         }
@@ -201,7 +208,7 @@ public class SetPasswordPanel extends Panel {
 
                 final Node userNode = session.getNode(HIPPO_USERS_PATH + uid);
                 if (userNode == null) {
-                    LOGGER.info("Unknown username: " + uid);
+                    log.info("Unknown username: {}", uid);
                     error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                     return;
                 }
@@ -218,7 +225,7 @@ public class SetPasswordPanel extends Panel {
                 session.save();
 
             } catch (final RepositoryException re) {
-                LOGGER.error("Error saving password SetPasswordForm", re);
+                log.error("Error saving password SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } finally {
                 if (session != null) {
@@ -238,7 +245,7 @@ public class SetPasswordPanel extends Panel {
                     return false;
                 }
             } catch (final RepositoryException re) {
-                LOGGER.error("Error validating SetPasswordForm", re);
+                log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
                 return false;
             } finally {
@@ -258,15 +265,15 @@ public class SetPasswordPanel extends Panel {
                 validateTimestamp(uid, userNode);
 
             } catch (final PathNotFoundException pnfe) {
-                LOGGER.error("Unknown username: " + uid, pnfe);
+                log.error("Unknown username: {}", uid, pnfe);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordException rpe) {
-                LOGGER.info("Error handling verification url: " + rpe);
+                log.info("Error handling verification url: {}", rpe);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordLinkExpiredException rpplee) {
-                LOGGER.info("Error handling verification url: " + rpplee);
+                log.info("Error handling verification url: {}", rpplee);
                 error(labelMap.get(Configuration.RESET_LINK_EXPIRED));
                 return true;
             }

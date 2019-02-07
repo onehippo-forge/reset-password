@@ -2,44 +2,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-cms7-release</artifactId>
-      <version>11.2.4</version>
-    </parent>
+  <parent>
+    <groupId>org.onehippo.cms7</groupId>
+    <artifactId>hippo-cms7-release</artifactId>
+    <version>12.6.1</version>
+  </parent>
 
-    <name>Hippo Reset Password</name>
-    <description>Hippo Reset Password</description>
-    <groupId>org.onehippo.forge</groupId>
-    <artifactId>resetpassword</artifactId>
-    <version>2.0</version>
-    <packaging>pom</packaging>
-    <url>https://github.com/bloomreach-forge/reset-password</url>
-    <inceptionYear>2016</inceptionYear>
-    <organization>
-      <name>Hippo</name>
-      <url>https://www.onehippo.com</url>
-    </organization>
+  <name>BloomReach Reset Password</name>
+  <description>Hippo Reset Password</description>
+  <groupId>org.bloomreach.forge.resetpassword</groupId>
+  <artifactId>resetpassword</artifactId>
+  <version>3.0</version>
+  <packaging>pom</packaging>
+  <url>https://github.com/bloomreach-forge/reset-password</url>
+  <inceptionYear>2016</inceptionYear>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.javaVersion>1.8</project.build.javaVersion>
+  <organization>
+    <name>BloomReach</name>
+    <url>https://www.bloomreach.com</url>
+  </organization>
 
-        <plugin.compiler.version>3.1</plugin.compiler.version>
-        <plugin.clean.version>2.5</plugin.clean.version>
-        <plugin.deploy.version>2.8.1</plugin.deploy.version>
-        <plugin.install.version>2.5.1</plugin.install.version>
-        <plugin.jar.version>2.4</plugin.jar.version>
-        <plugin.release.version>2.5</plugin.release.version>
-        <plugin.resources.version>2.6</plugin.resources.version>
-        <plugin.site.version>3.6</plugin.site.version>
-        <plugin.source.version>2.2.1</plugin.source.version>
-        <plugin.surefire.version>2.17</plugin.surefire.version>
+  <properties>
+    <essentials.version>4.6.1</essentials.version>
+    <jackrabbit.version>2.16.2-h3</jackrabbit.version>
 
-        <commons-email.version>1.3.3</commons-email.version>
-        <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
+    <plugin.compiler.version>3.1</plugin.compiler.version>
+    <plugin.clean.version>2.5</plugin.clean.version>
+    <plugin.deploy.version>2.8.1</plugin.deploy.version>
+    <plugin.install.version>2.5.1</plugin.install.version>
+    <plugin.jar.version>2.4</plugin.jar.version>
+    <plugin.release.version>2.5</plugin.release.version>
+    <plugin.resources.version>3.1.0</plugin.resources.version>
+    <plugin.site.version>3.6</plugin.site.version>
+    <plugin.source.version>2.2.1</plugin.source.version>
+    <plugin.surefire.version>2.17</plugin.surefire.version>
 
-    </properties>
+    <commons-email.version>1.3.3</commons-email.version>
+    <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.javaVersion>1.8</project.build.javaVersion>
+
+    <jackson-jaxrs-json-provider.version>2.4.5</jackson-jaxrs-json-provider.version>
+  </properties>
 
   <scm>
     <connection>scm:git:git@github.com:bloomreach-forge/reset-password.git</connection>
@@ -119,27 +123,75 @@
       <id>hippo-maven2-forge</id>
       <name>Hippo Maven 2 Forge repository</name>
       <url>http://maven.onehippo.com/maven2-forge/</url>
-      <snapshots />
+      <snapshots/>
     </repository>
   </repositories>
 
   <dependencyManagement>
     <dependencies>
+      <!-- TODO mm check if provided-->
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jackson-jaxrs-json-provider.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
         <version>${essentials.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-essentials-plugin-sdk-implementation</artifactId>
+        <version>${essentials.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-api</artifactId>
+        <version>${jackrabbit.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.jcr</groupId>
+        <artifactId>jcr</artifactId>
+        <version>${javax.jcr.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-repository-api</artifactId>
+        <version>${hippo.repository.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-services</artifactId>
+        <version>${hippo.services.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-javamail_1.4_spec</artifactId>
+        <version>${geronimo.javamail.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
   <modules>
+    <module>reset-password-essentials</module>
     <module>bootstrap</module>
     <module>cms</module>
   </modules>
-
   <build>
     <defaultGoal>package</defaultGoal>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -174,11 +226,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${plugin.surefire.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>${plugin.resources.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

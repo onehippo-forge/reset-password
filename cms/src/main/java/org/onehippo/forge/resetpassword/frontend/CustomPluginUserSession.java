@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.QueryManager;
+
 import org.apache.wicket.request.Request;
 import org.hippoecm.frontend.PluginApplication;
 import org.hippoecm.frontend.model.JcrSessionModel;
@@ -24,10 +28,6 @@ import org.hippoecm.repository.api.HippoNode;
 import org.onehippo.repository.security.JvmCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.QueryManager;
 
 /**
  * CustomPluginUserSession
@@ -40,10 +40,12 @@ import javax.jcr.query.QueryManager;
 public class CustomPluginUserSession extends PluginUserSession {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomPluginUserSession.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomPluginUserSession.class);
 
     private static final String USER_RESETPASSWORD = "resetpassword";
     private Session currentSession;
+    public static final String LOCALE_COOKIE = "loc";
+    public static final int LOCALE_COOKIE_MAXAGE = 365 * 24 * 3600; // expire one year from now
 
     /**
      * Constructor to create new session.
@@ -103,7 +105,7 @@ public class CustomPluginUserSession extends PluginUserSession {
         try {
             return getResetPasswordSession().getWorkspace().getQueryManager();
         } catch (final RepositoryException re) {
-            LOGGER.error("Error getting queryManager", re);
+            log.error("Error getting queryManager", re);
             return null;
         }
     }
@@ -122,7 +124,7 @@ public class CustomPluginUserSession extends PluginUserSession {
                 result = (HippoNode) jcrSession.getRootNode();
             }
         } catch (final RepositoryException e) {
-            LOGGER.error("RepositoryException", e);
+            log.error("RepositoryException", e);
         }
         return result;
     }

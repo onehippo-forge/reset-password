@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.onehippo.forge</groupId>
+    <groupId>org.bloomreach.forge.resetpassword</groupId>
     <artifactId>resetpassword</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
   </parent>
 
-  <name>Reset Password Bootstrap</name>
+  <name>BloomReach Reset Password Bootstrap</name>
   <description>Reset Password Bootstrap</description>
   <artifactId>resetpassword-bootstrap</artifactId>
   <packaging>pom</packaging>
