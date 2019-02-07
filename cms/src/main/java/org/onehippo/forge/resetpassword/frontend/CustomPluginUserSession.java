@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class CustomPluginUserSession extends PluginUserSession {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomPluginUserSession.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomPluginUserSession.class);
 
     private static final String USER_RESETPASSWORD = "resetpassword";
     private Session currentSession;
@@ -105,7 +105,7 @@ public class CustomPluginUserSession extends PluginUserSession {
         try {
             return getResetPasswordSession().getWorkspace().getQueryManager();
         } catch (final RepositoryException re) {
-            LOGGER.error("Error getting queryManager", re);
+            log.error("Error getting queryManager", re);
             return null;
         }
     }
@@ -124,7 +124,7 @@ public class CustomPluginUserSession extends PluginUserSession {
                 result = (HippoNode) jcrSession.getRootNode();
             }
         } catch (final RepositoryException e) {
-            LOGGER.error("RepositoryException", e);
+            log.error("RepositoryException", e);
         }
         return result;
     }

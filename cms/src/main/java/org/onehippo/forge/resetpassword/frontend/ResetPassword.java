@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,18 +33,18 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
+
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
-import org.hippoecm.frontend.plugins.login.LoginPlugin;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,20 +57,20 @@ import org.slf4j.LoggerFactory;
 public class ResetPassword extends RenderPlugin {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResetPassword.class);
+    private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
 
     private static final ResourceReference DEFAULT_FAVICON = new UrlResourceReference(
             Url.parse("../skin/images/hippo-cms.ico"));
 
-    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.onehippo.com/tnc";
+    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.bloomreach.com/en/about/privacy";
     private static final String PARAM_CODE = "code";
     private static final String PARAM_UID = "uid";
 
     private static final int DEFAULT_URL_VALIDITY_IN_MINUTES = 60;
 
     private static final String EDITION = "edition";
-
     private ResourceReference editionCss;
+
     private final String configurationPath;
 
     /**
@@ -108,10 +108,12 @@ public class ResetPassword extends RenderPlugin {
         add(setPasswordForm);
 
         // In case of using a different edition, add extra CSS rules to show the required styling
+/*  FIXME no login_enterprise.css (yet?)
         if (config.containsKey(EDITION)) {
             final String edition = config.getString(EDITION);
             editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
         }
+*/
 
         final ExternalLink termsAndConditions = new ExternalLink("termsAndConditions", TERMS_AND_CONDITIONS_LINK) {
             private static final long serialVersionUID = 1L;
@@ -145,22 +147,21 @@ public class ResetPassword extends RenderPlugin {
         if(cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
-        Session session = null;
+        final Session session = userSession.getResetPasswordSession();
 
         try {
-            session = userSession.getResetPasswordSession();
 
             final Node configNode = session.getNode(configurationPath);
             return new Configuration(configNode);
         } catch (final RepositoryException re) {
-            LOGGER.error("Error trying to fetch configuration node", re);
+            log.error("Error trying to fetch configuration node", re);
+            throw new IllegalStateException("Failed to read configuration from resetpassword JCR session");
         } finally {
             if (session != null) {
                 session.logout();
                 userSession.removeResetPasswordSession();
             }
         }
-        return null;
     }
 
     protected String getCookieValue(final String cookieName) {

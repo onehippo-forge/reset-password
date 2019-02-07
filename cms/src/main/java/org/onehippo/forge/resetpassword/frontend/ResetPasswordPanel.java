@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 Hippo B.V. (http://www.onehippo.com)
+ *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,6 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.hippoecm.frontend.util.RequestUtils.getFarthestRequestScheme;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.HIPPO_USERS_PATH;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_KEY;
+import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_TIMESTAMP;
 
 /**
  * ResetPasswordPanel
@@ -62,11 +65,9 @@ import static org.hippoecm.frontend.util.RequestUtils.getFarthestRequestScheme;
 public class ResetPasswordPanel extends Panel {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResetPasswordPanel.class);
+    private static final Logger log = LoggerFactory.getLogger(ResetPasswordPanel.class);
 
-    private static final String PASSWORD_RESET_KEY = "passwordResetKey";
-    private static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
-    private static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
+
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private static final String SPACE = " ";
@@ -149,13 +150,13 @@ public class ResetPasswordPanel extends Panel {
                     resetSuccess = true;
                 }
             } catch (final PathNotFoundException ignore) {
-                LOGGER.info("Unknown username: " + userId);
+                log.info("Unknown username: {}", userId);
                 info(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
             } catch (final EmailException e) {
-                LOGGER.error("Sending mail failed.", e);
+                log.error("Sending mail failed.", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } catch (final RepositoryException re) {
-                LOGGER.error("RepositoryException.", re);
+                log.error("RepositoryException.", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } finally {
                 if (session != null) {
@@ -191,18 +192,18 @@ public class ResetPasswordPanel extends Panel {
                 hippoUserActive = userNode.getProperty("hipposys:active").getBoolean();
             }
             if (!hippoUserActive) {
-                LOGGER.error("User is not active: " + userId);
+                log.error("User is not active: {}", userId);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return false;
             }
-
+            
             String hippoUserEmail = null;
             if (userNode.hasProperty("hipposys:email")) {
                 hippoUserEmail = userNode.getProperty("hipposys:email").getString();
             }
 
             if (StringUtils.isEmpty(hippoUserEmail)) {
-                LOGGER.error("Unknown e-mail: " + userId);
+                log.error("Unknown e-mail: {}", userId);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return false;
             }
@@ -213,9 +214,8 @@ public class ResetPasswordPanel extends Panel {
             final Calendar dateNow = Calendar.getInstance();
             final Calendar currentDate = (Calendar) dateNow.clone();
             final String mailText = getMailText(session, code, username, dateNow);
-
             sendEmail(hippoUserEmail, username, mailText);
-
+            log.debug("Sending mail link to user: {}", mailText);
             // persist code and exp.date
             // Node should be relaxed before adding extra properties
             if (userNode.canAddMixin("hippostd:relaxed")) {
@@ -289,14 +289,14 @@ public class ResetPasswordPanel extends Panel {
             if (host != null) {
                 final String[] hosts = host.split(",");
                 final String location = getFarthestRequestScheme(request) + "://" + hosts[0];
-                LOGGER.debug("X-Forwarded-Host header found. Return location '{}'", location);
+                log.debug("X-Forwarded-Host header found. Return location '{}'", location);
                 return location;
             }
 
             host = request.getHeader("Host");
             if (host != null && !"".equals(host)) {
                 final String location = getFarthestRequestScheme(request) + "://" + host;
-                LOGGER.debug("Host header found. Return location '{}'", location);
+                log.debug("Host header found. Return location '{}'", location);
                 return location;
             }
 
@@ -323,7 +323,7 @@ public class ResetPasswordPanel extends Panel {
                 target.append(':')
                         .append(port);
             }
-            LOGGER.debug("Host '{}' from request.serverName is used because no 'Host' or 'X-Forwarded-Host' header found. " +
+            log.debug("Host '{}' from request.serverName is used because no 'Host' or 'X-Forwarded-Host' header found. " +
                     "Return location '{}'", target.toString());
             return target.toString();
         }
@@ -345,7 +345,7 @@ public class ResetPasswordPanel extends Panel {
                 }
 
             } catch (final RepositoryException e) {
-                LOGGER.error("Well something broke", e);
+                log.error("Well something broke", e);
                 //Errors break the flow, but we need this session elsewhere so only on Exceptions do we close it here.
                 resetPasswordSession.logout();
                 userSession.removeResetPasswordSession();
