@@ -45,7 +45,7 @@
     </section>
     <section name="Release Notes">
       <subsection name="3.0">
-        <p class="smallinfo">Release Date: 7 January 2019</p>
+        <p class="smallinfo">Release Date: 7 February 2019</p>
         <ul>
           <li>Upgrade to BloomReach Experience 12.6</li>
           <li>Rename artifacts to have groupId <code>org.bloomreach.forge.resetpassword</code></li>
