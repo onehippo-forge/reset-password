@@ -125,6 +125,12 @@
       <url>http://maven.onehippo.com/maven2-forge/</url>
       <snapshots/>
     </repository>
+    <repository>
+      <id>hippo-maven2-enterprise</id>
+      <name>Hippo Maven 2 enterprise repository</name>
+      <url>http://maven.onehippo.com/maven2-enterprise/</url>
+      <snapshots/>
+    </repository>
   </repositories>
 
   <dependencyManagement>
