@@ -50,7 +50,7 @@ public class CustomLoginPlugin extends DefaultLoginPlugin {
         response.render(CssHeaderItem.forReference(loginCss));
     }
 
-    class CustomLoginForm extends LoginPanel {
+    class CustomLoginForm extends LoginForm {
 
         public CustomLoginForm(final String id, final boolean autoComplete, final List<String> locales, final LoginHandler handler) {
             super(id, autoComplete, locales, handler);
