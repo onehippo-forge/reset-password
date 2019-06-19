@@ -44,6 +44,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="3.1">
+        <p class="smallinfo">Release Date: 19 June 2019</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-286">HIPFORGE-286</a><br/>
+            Extend initial login form from LoginForm instead of LoginPanel so the timezone and captcha will show.</li>
+        </ul>
+      </subsection>
       <subsection name="3.0">
         <p class="smallinfo">Release Date: 7 February 2019</p>
         <ul>

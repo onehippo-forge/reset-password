@@ -39,13 +39,6 @@
       <id>hippo-forge</id>
       <name>Bloomreach Forge Maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <layout>default</layout>
     </repository>
         ]]></source>
                 </div>
@@ -59,7 +52,7 @@
      <dependency>
         <groupId>org.bloomreach.forge.resetpassword</groupId>
         <artifactId>reset-password-essentials</artifactId>
-        <version>3.0</version>
+        <version>3.1</version>
      </dependency>
         ]]></source>
                 </div>
