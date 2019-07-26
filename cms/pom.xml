@@ -14,7 +14,7 @@
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-cms-engine</artifactId>
+      <artifactId>hippo-cms-login</artifactId>
       <version>${hippo.cms.version}</version>
     </dependency>
     <dependency>
@@ -32,6 +32,10 @@
       <artifactId>commons-email</artifactId>
       <version>${commons-email.version}</version>
       <exclusions>
+        <exclusion>
+          <groupId>com.sun.mail</groupId>
+          <artifactId>javax.mail</artifactId>
+        </exclusion>
         <exclusion>
           <artifactId>mail</artifactId>
           <groupId>javax.mail</groupId>

@@ -32,10 +32,10 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.UrlResourceReference;
 
+import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
@@ -58,9 +58,7 @@ public class ResetPassword extends RenderPlugin {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
-
-    private static final ResourceReference DEFAULT_FAVICON = new UrlResourceReference(
-            Url.parse("../skin/images/hippo-cms.ico"));
+    private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
     private static final String TERMS_AND_CONDITIONS_LINK = "https://www.bloomreach.com/en/about/privacy";
     private static final String PARAM_CODE = "code";
@@ -82,7 +80,7 @@ public class ResetPassword extends RenderPlugin {
         super(context, new JavaPluginConfig(config));
         configurationPath = config.getString("labels.location");
 
-        add(CssClass.append("hippo-login-plugin"));
+        add(CssClass.append("login-plugin"));
 
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));

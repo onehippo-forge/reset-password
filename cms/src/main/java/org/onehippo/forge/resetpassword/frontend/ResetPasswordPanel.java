@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.jcr.Node;
@@ -45,6 +46,8 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.util.WebApplicationHelper;
+import org.hippoecm.hst.core.request.ResolvedVirtualHost;
+import org.hippoecm.hst.platform.model.HstModelRegistry;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
@@ -84,7 +87,7 @@ public class ResetPasswordPanel extends Panel {
     public ResetPasswordPanel(final PanelInfo panelInfo) {
         super("resetPasswordForm");
 
-        add(CssClass.append("hippo-login-panel-center"));
+        add(CssClass.append("login-panel-center"));
         add(new ResetPasswordForm(panelInfo.isAutoComplete(), panelInfo.getUserId(), panelInfo.getConfiguration()));
     }
 
@@ -329,28 +332,26 @@ public class ResetPasswordPanel extends Panel {
         }
 
         private String getConfiguredContextPath(final String hostname, final String defaultContextPath) {
-            final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-            Session resetPasswordSession = userSession.getResetPasswordSession();
-            try {
-                final Node hosts = resetPasswordSession.getNode("/hst:hst/hst:hosts");
-                final NodeIterator nodeIterator = hosts.getNodes();
-                while (nodeIterator.hasNext()) {
-                    final Node hostGroup = nodeIterator.nextNode();
-                    if (hostGroup.hasProperty(HST_CMSLOCATION)) {
-                        final String location = hostGroup.getProperty(HST_CMSLOCATION).getString();
-                        if (location.contains(hostname)) {
-                            return StringUtils.substringAfter(location, hostname);
-                        }
-                    }
+            final String domain = retrieveDomain(hostname);
+            if(StringUtils.isNotEmpty(domain)) {
+                ResolvedVirtualHost resolvedVirtualHost = HippoServiceRegistry.getService(HstModelRegistry.class).getHstModel("/cms").getVirtualHosts().matchVirtualHost(domain);
+                if(resolvedVirtualHost != null){
+                    return resolvedVirtualHost.getVirtualHost().isContextPathInUrl()? resolvedVirtualHost.getVirtualHost().getContextPath() : StringUtils.EMPTY ;
                 }
-
-            } catch (final RepositoryException e) {
-                log.error("Well something broke", e);
-                //Errors break the flow, but we need this session elsewhere so only on Exceptions do we close it here.
-                resetPasswordSession.logout();
-                userSession.removeResetPasswordSession();
+                log.debug("Couldn't match the domain {} to any of the configured virtual host groups." , domain);
             }
+            log.debug("Returning default context path {} because no domain was retrieved or virtual host group matched.", defaultContextPath);
             return defaultContextPath;
+        }
+
+        private String retrieveDomain(final String hostname) {
+            Pattern domainPattern = Pattern.compile("^(?:https?:)?(?:\\/\\/)?(?:[^@\\n]+@)?([^:\\/\\n]+)");
+            Matcher domainMatcher = domainPattern.matcher(hostname);
+            if(domainMatcher.find()){
+                return domainMatcher.group(1);
+            }
+            log.error("Couldn't retrieve a domain from the host : {}" , hostname);
+            return null;
         }
 
         private String getUserName(final Node userNode) throws RepositoryException {
