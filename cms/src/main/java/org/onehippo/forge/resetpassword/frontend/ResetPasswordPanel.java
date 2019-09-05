@@ -17,17 +17,15 @@ package org.onehippo.forge.resetpassword.frontend;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,17 +42,19 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.util.WebApplicationHelper;
-import org.hippoecm.hst.core.request.ResolvedVirtualHost;
-import org.hippoecm.hst.platform.model.HstModelRegistry;
+import org.hippoecm.hst.util.HstRequestUtils;
+
 import org.onehippo.cms7.services.HippoServiceRegistry;
+
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.hippoecm.frontend.util.RequestUtils.getFarthestRequestScheme;
 import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.HIPPO_USERS_PATH;
 import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_KEY;
 import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSWORD_RESET_TIMESTAMP;
@@ -97,7 +97,6 @@ public class ResetPasswordPanel extends Panel {
     protected class ResetPasswordForm extends Form {
 
         private static final long serialVersionUID = 1L;
-        private static final String HST_CMSLOCATION = "hst:cmslocation";
 
         private final FeedbackPanel feedback;
         private final WebMarkupContainer resetPasswordFormTable;
@@ -212,18 +211,22 @@ public class ResetPasswordPanel extends Panel {
             }
 
             final String code = UUID.randomUUID().toString();
-            final String username = getUserName(userNode);
-
+            final String url = getResetPasswordUrl(code);
+            final String userName = getUserName(userNode);
             final Calendar dateNow = Calendar.getInstance();
-            final Calendar currentDate = (Calendar) dateNow.clone();
-            final String mailText = getMailText(session, code, username, dateNow);
-            sendEmail(hippoUserEmail, username, mailText);
+            dateNow.add(Calendar.MINUTE, urlValidityDuration);
+            final Calendar expiryDate = (Calendar) dateNow.clone();
+
+            final String mailText = getMailText(url, userName, expiryDate);
+
+            sendEmail(hippoUserEmail, userName, mailText);
             log.debug("Sending mail link to user: {}", mailText);
             // persist code and exp.date
             // Node should be relaxed before adding extra properties
             if (userNode.canAddMixin("hippostd:relaxed")) {
                 userNode.addMixin("hippostd:relaxed");
             }
+            final Calendar currentDate = (Calendar) dateNow.clone();
             userNode.setProperty(PASSWORD_RESET_TIMESTAMP, currentDate);
             userNode.setProperty(PASSWORD_RESET_KEY, code);
 
@@ -238,18 +241,14 @@ public class ResetPasswordPanel extends Panel {
             mailService.sendMail(mailMessage);
         }
 
-        private String getMailText(final Session session, final String code, final String username, final Calendar dateNow) throws RepositoryException {
-            // set expire date (used in email)
-            dateNow.add(Calendar.MINUTE, urlValidityDuration);
-            final Calendar expireDate = (Calendar) dateNow.clone();
-
-            final String url = getUrl(session, code);
-
+        private String getMailText(final String url, final String username, final Calendar expireDate) {
             // generate text
             String mailText = labelMap.get(Configuration.EMAIL_TEXT_RESET);
+
             mailText = EMAIL_PARAM_NAME_PATTERN.matcher(mailText).replaceAll(username);
             mailText = EMAIL_PARAM_URL_PATTERN.matcher(mailText).replaceAll(url);
             mailText = EMAIL_PARAM_VALIDITY_PATTERN.matcher(mailText).replaceAll(new SimpleDateFormat(DATE_FORMAT).format(expireDate.getTime()));
+
             return mailText;
         }
 
@@ -267,91 +266,11 @@ public class ResetPasswordPanel extends Panel {
             return mailMessage;
         }
 
-        private String getUrl(final Session session, final String code) {
-            final String frontendHostName = getLocationHeaderOrigin();
-
-            return frontendHostName + getConfiguredContextPath(frontendHostName, getRequest().getContextPath()) +
-                    "/resetpassword?code=" +
-                    code +
-                    "&uid=" +
-                    userId;
-        }
-
-        /**
-         * Creates a RFC-6454 comparable origin from the {@code request} requested resource.
-         * <p>
-         * // stole logic from org.hippoecm.frontend.http.CsrfPreventionRequestCycleListener#getLocationHeaderOrigin(javax.servlet.http.HttpServletRequest)
-         *
-         * @return only the scheme://host[:port] part, or {@code null} when the origin string is not
-         * compliant
-         */
-        private String getLocationHeaderOrigin() {
+        private String getResetPasswordUrl(final String code) {
             final HttpServletRequest request = WebApplicationHelper.retrieveWebRequest().getContainerRequest();
+            final String cmsBaseURL = HstRequestUtils.getCmsBaseURL(request);
 
-            String host = request.getHeader("X-Forwarded-Host");
-            if (host != null) {
-                final String[] hosts = host.split(",");
-                final String location = getFarthestRequestScheme(request) + "://" + hosts[0];
-                log.debug("X-Forwarded-Host header found. Return location '{}'", location);
-                return location;
-            }
-
-            host = request.getHeader("Host");
-            if (host != null && !"".equals(host)) {
-                final String location = getFarthestRequestScheme(request) + "://" + host;
-                log.debug("Host header found. Return location '{}'", location);
-                return location;
-            }
-
-            // Build scheme://host:port from request
-            String scheme = request.getScheme();
-            if (scheme == null) {
-                return null;
-            } else {
-                scheme = scheme.toLowerCase(Locale.ENGLISH);
-            }
-
-            host = request.getServerName();
-            if (host == null) {
-                return null;
-            }
-
-            final StringBuilder target = new StringBuilder();
-            target.append(scheme)
-                    .append("://")
-                    .append(host);
-
-            final int port = request.getServerPort();
-            if ("http".equals(scheme) && port != 80 || "https".equals(scheme) && port != 443) {
-                target.append(':')
-                        .append(port);
-            }
-            log.debug("Host '{}' from request.serverName is used because no 'Host' or 'X-Forwarded-Host' header found. " +
-                    "Return location '{}'", target.toString());
-            return target.toString();
-        }
-
-        private String getConfiguredContextPath(final String hostname, final String defaultContextPath) {
-            final String domain = retrieveDomain(hostname);
-            if(StringUtils.isNotEmpty(domain)) {
-                ResolvedVirtualHost resolvedVirtualHost = HippoServiceRegistry.getService(HstModelRegistry.class).getHstModel("/cms").getVirtualHosts().matchVirtualHost(domain);
-                if(resolvedVirtualHost != null){
-                    return resolvedVirtualHost.getVirtualHost().isContextPathInUrl()? resolvedVirtualHost.getVirtualHost().getContextPath() : StringUtils.EMPTY ;
-                }
-                log.debug("Couldn't match the domain {} to any of the configured virtual host groups." , domain);
-            }
-            log.debug("Returning default context path {} because no domain was retrieved or virtual host group matched.", defaultContextPath);
-            return defaultContextPath;
-        }
-
-        private String retrieveDomain(final String hostname) {
-            Pattern domainPattern = Pattern.compile("^(?:https?:)?(?:\\/\\/)?(?:[^@\\n]+@)?([^:\\/\\n]+)");
-            Matcher domainMatcher = domainPattern.matcher(hostname);
-            if(domainMatcher.find()){
-                return domainMatcher.group(1);
-            }
-            log.error("Couldn't retrieve a domain from the host : {}" , hostname);
-            return null;
+            return cmsBaseURL + "/resetpassword?code=" + code + "&uid=" + userId;
         }
 
         private String getUserName(final Node userNode) throws RepositoryException {
