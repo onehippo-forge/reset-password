@@ -25,7 +25,6 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,7 +47,6 @@ import org.hippoecm.frontend.util.WebApplicationHelper;
 import org.hippoecm.hst.util.HstRequestUtils;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
-
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
 
@@ -67,7 +65,6 @@ import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSW
  */
 public class ResetPasswordPanel extends Panel {
 
-    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordPanel.class);
 
 
@@ -95,8 +92,6 @@ public class ResetPasswordPanel extends Panel {
      * Inner class for form on panel
      */
     protected class ResetPasswordForm extends Form {
-
-        private static final long serialVersionUID = 1L;
 
         private final FeedbackPanel feedback;
         private final WebMarkupContainer resetPasswordFormTable;

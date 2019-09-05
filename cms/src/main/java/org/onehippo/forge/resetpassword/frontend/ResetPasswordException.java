@@ -20,8 +20,6 @@ package org.onehippo.forge.resetpassword.frontend;
  */
 public class ResetPasswordException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Reset Password specific exception
      * @param message message

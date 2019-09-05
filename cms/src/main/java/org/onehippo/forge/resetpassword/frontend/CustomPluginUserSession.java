@@ -20,12 +20,15 @@ import javax.jcr.Session;
 import javax.jcr.query.QueryManager;
 
 import org.apache.wicket.request.Request;
+
 import org.hippoecm.frontend.PluginApplication;
 import org.hippoecm.frontend.model.JcrSessionModel;
 import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.repository.api.HippoNode;
+
 import org.onehippo.repository.security.JvmCredentials;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 public class CustomPluginUserSession extends PluginUserSession {
 
-    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(CustomPluginUserSession.class);
 
     private static final String USER_RESETPASSWORD = "resetpassword";
@@ -128,5 +130,4 @@ public class CustomPluginUserSession extends PluginUserSession {
         }
         return result;
     }
-
 }

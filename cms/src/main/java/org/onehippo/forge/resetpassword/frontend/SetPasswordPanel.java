@@ -25,6 +25,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -39,6 +40,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
@@ -46,6 +48,7 @@ import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValid
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
 import org.hippoecm.frontend.plugins.cms.admin.users.User;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +64,6 @@ import static org.onehippo.forge.resetpassword.frontend.ResetPasswordConst.PASSW
  * Based on @Link{SimpleLoginPlugin} en @Link{LoginPlugin}.
  */
 public class SetPasswordPanel extends Panel {
-
-    private static final long serialVersionUID = 1L;
 
     private static final Logger log = LoggerFactory.getLogger(SetPasswordPanel.class);
 
@@ -93,8 +94,6 @@ public class SetPasswordPanel extends Panel {
     }
 
     protected class SetPasswordForm extends Form {
-
-        private static final long serialVersionUID = 1L;
 
         private final String code;
         private final String uid;
@@ -128,8 +127,6 @@ public class SetPasswordPanel extends Panel {
             add(loginLink);
 
             final Link<Void> resetLink = new Link<Void>("resetLink") {
-
-                private static final long serialVersionUID = 1L;
 
                 @Override
                 public void onClick() {
@@ -176,10 +173,10 @@ public class SetPasswordPanel extends Panel {
             validateForm(code, uid);
 
             try {
-                // valideer wachtwoord
+                // validate password
                 final User user = new User(uid);
-                final List<PasswordValidationStatus> statuses = passwordValidationService
-                        .checkPassword(passwordField.getValue(), user);
+                final List<PasswordValidationStatus> statuses =
+                        passwordValidationService.checkPassword(passwordField.getValue(), user);
                 for (final PasswordValidationStatus status : statuses) {
                     if (!status.accepted()) {
                         error(status.getMessage());

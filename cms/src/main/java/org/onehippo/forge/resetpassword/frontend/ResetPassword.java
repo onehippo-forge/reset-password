@@ -15,16 +15,16 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ResetPassword extends RenderPlugin {
 
-    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
     private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
@@ -85,9 +84,6 @@ public class ResetPassword extends RenderPlugin {
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
 
-        final Configuration configuration = getCustomPluginUserSession();
-        final Map<String, String> labelsMap = configuration != null ? configuration.getLabelMap() : new HashMap<>();
-        final int urlDuration = configuration != null ? configuration.getDurationsMap().get(Configuration.URL_VALIDITY_IN_MINUTES).intValue() : DEFAULT_URL_VALIDITY_IN_MINUTES;
 
         final IRequestParameters requestParameters = getRequest().getQueryParameters();
         final String code = requestParameters.getParameterValue(PARAM_CODE).toString();
@@ -96,6 +92,7 @@ public class ResetPassword extends RenderPlugin {
 
         final boolean autocomplete = getPluginConfig().getAsBoolean("signin.form.autocomplete", true);
 
+        final Configuration configuration = getConfiguration();
         final PanelInfo panelInfo = new PanelInfo(autocomplete, uid, configuration, context, config);
         final Panel resetPasswordForm = new ResetPasswordPanel(panelInfo);
         resetPasswordForm.setVisible(!hasParameters);
@@ -114,7 +111,6 @@ public class ResetPassword extends RenderPlugin {
 */
 
         final ExternalLink termsAndConditions = new ExternalLink("termsAndConditions", TERMS_AND_CONDITIONS_LINK) {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public boolean isVisible() {
@@ -139,12 +135,13 @@ public class ResetPassword extends RenderPlugin {
         }
     }
 
-    private Configuration getCustomPluginUserSession() {
+    private Configuration getConfiguration() {
         final CustomPluginUserSession userSession = CustomPluginUserSession.get();
         final String cookieValue = getCookieValue(CustomPluginUserSession.LOCALE_COOKIE);
-        if(cookieValue != null) {
+        if (cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
+
         final Session session = userSession.getResetPasswordSession();
 
         try {
