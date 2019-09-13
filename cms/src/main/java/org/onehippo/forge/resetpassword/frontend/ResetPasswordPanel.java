@@ -38,18 +38,17 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-
+import org.hippoecm.frontend.plugins.login.LoginResourceModel;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.util.WebApplicationHelper;
 import org.hippoecm.hst.util.HstRequestUtils;
-
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +92,8 @@ public class ResetPasswordPanel extends Panel {
      */
     protected class ResetPasswordForm extends Form {
 
+        private final RequiredTextField<String> usernameTextField;
+        private final IModel<String> usernamePlaceholder;
         private final FeedbackPanel feedback;
         private final WebMarkupContainer resetPasswordFormTable;
         private final Map<String, String> labelMap;
@@ -118,11 +119,11 @@ public class ResetPasswordPanel extends Panel {
             resetPasswordFormTable = new WebMarkupContainer("resetPasswordFormTable");
 
             addLabelledComponent(resetPasswordFormTable, new Label("header-label", new ResourceModel("header")));
-            addLabelledComponent(resetPasswordFormTable, new Label("username-label", new ResourceModel("username-label")));
 
-            resetPasswordFormTable.add(new RequiredTextField<>("username",
+            resetPasswordFormTable.add(usernameTextField = new RequiredTextField<>("username",
                     new PropertyModel<>(this, "userId")));
-
+            usernamePlaceholder = new LoginResourceModel("username-label", ResetPassword.class);
+            addAjaxAttributeModifier(usernameTextField, "placeholder", usernamePlaceholder);
             resetPasswordFormTable.add(new AttributeModifier("autocomplete", new Model<>(autoComplete ? "on" : "off")));
             resetPasswordFormTable.add(new Button("submit", new ResourceModel("submit-label")));
             add(resetPasswordFormTable);
@@ -283,6 +284,11 @@ public class ResetPasswordPanel extends Panel {
         private void addLabelledComponent(final WebMarkupContainer container, final Component component) {
             component.setOutputMarkupId(true);
             container.add(component);
+        }
+
+        private void addAjaxAttributeModifier(final Component component, final String name, final IModel<String> value) {
+            final AjaxAttributeModifier modifier = new AjaxAttributeModifier(name, value);
+            component.add(modifier);
         }
     }
 }

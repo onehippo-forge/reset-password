@@ -25,9 +25,10 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -37,18 +38,18 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationServiceImpl;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
 import org.hippoecm.frontend.plugins.cms.admin.users.User;
+import org.hippoecm.frontend.plugins.login.LoginResourceModel;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,14 @@ public class SetPasswordPanel extends Panel {
 
     }
 
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(OnDomReadyHeaderItem.forScript("$('#password-verification').bind(\"cut copy paste\",function(e) {" +
+                "  e.preventDefault();" +
+                "});"));
+    }
+
     protected class SetPasswordForm extends Form {
 
         private final String code;
@@ -100,7 +109,9 @@ public class SetPasswordPanel extends Panel {
 
         private final FeedbackPanel feedback;
         private TextField<String> passwordField;
+        private IModel<String> passwordPlaceholder;
         private TextField<String> passwordVerificationField;
+        private IModel<String> passwordVerificationPlaceholder;
 
         private String password;
         private String passwordVerification;
@@ -149,15 +160,17 @@ public class SetPasswordPanel extends Panel {
         }
 
         private void createPasswordFormTable(final boolean autocomplete) {
-            addLabelledComponent(setPasswordFormTable, new Label("password-label", new ResourceModel("password-label")));
-            addLabelledComponent(setPasswordFormTable, new Label("password-verification-label", new ResourceModel("password-verification-label")));
             setPasswordFormTable.add(new Label("intro.text", labelMap.get(Configuration.SET_PW_INTRO_TEXT)));
 
             setPasswordFormTable.add(passwordField = new PasswordTextField("new-password",
                     new PropertyModel<>(this, "password")));
             setPasswordFormTable.add(passwordVerificationField = new PasswordTextField("repeat-password",
                     new PropertyModel<>(this, "passwordVerification")));
-
+            passwordVerificationField.setMarkupId("password-verification");
+            passwordPlaceholder = new LoginResourceModel("password-label", ResetPassword.class);
+            passwordVerificationPlaceholder = new LoginResourceModel("password-verification-label", ResetPassword.class);
+            addAjaxAttributeModifier(passwordField, "placeholder", passwordPlaceholder);
+            addAjaxAttributeModifier(passwordVerificationField, "placeholder", passwordVerificationPlaceholder);
             setPasswordFormTable.add(new AttributeModifier("autocomplete", new Model<>(autocomplete ? "on" : "off")));
             setPasswordFormTable.add(new Button("submit", new ResourceModel("submit-label")));
         }
@@ -309,6 +322,11 @@ public class SetPasswordPanel extends Panel {
         private void addLabelledComponent(final WebMarkupContainer container, final Component component) {
             component.setOutputMarkupId(true);
             container.add(component);
+        }
+
+        private void addAjaxAttributeModifier(final Component component, final String name, final IModel<String> value) {
+            final AjaxAttributeModifier modifier = new AjaxAttributeModifier(name, value);
+            component.add(modifier);
         }
     }
 }
