@@ -32,6 +32,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -55,6 +56,8 @@ import org.slf4j.LoggerFactory;
  * Based on @Link{SimpleLoginPlugin} and @Link{LoginPlugin}.
  */
 public class ResetPassword extends RenderPlugin {
+
+    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
 
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
     private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
@@ -84,7 +87,6 @@ public class ResetPassword extends RenderPlugin {
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
 
-
         final IRequestParameters requestParameters = getRequest().getQueryParameters();
         final String code = requestParameters.getParameterValue(PARAM_CODE).toString();
         final String uid = requestParameters.getParameterValue(PARAM_UID).toString();
@@ -101,14 +103,6 @@ public class ResetPassword extends RenderPlugin {
         final Panel setPasswordForm = new SetPasswordPanel(panelInfo, code, resetPasswordForm);
         setPasswordForm.setVisible(hasParameters);
         add(setPasswordForm);
-
-        // In case of using a different edition, add extra CSS rules to show the required styling
-/*  FIXME no login_enterprise.css (yet?)
-        if (config.containsKey(EDITION)) {
-            final String edition = config.getString(EDITION);
-            editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
-        }
-*/
 
         final ExternalLink termsAndConditions = new ExternalLink("termsAndConditions", TERMS_AND_CONDITIONS_LINK) {
 
@@ -128,6 +122,7 @@ public class ResetPassword extends RenderPlugin {
     @Override
     public final void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
+        response.render(CssHeaderItem.forReference(loginCss));
 
         response.render(LoginHeaderItem.get());
         if (editionCss != null) {

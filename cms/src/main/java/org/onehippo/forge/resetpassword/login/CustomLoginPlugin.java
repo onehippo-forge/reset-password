@@ -31,7 +31,7 @@ import org.onehippo.forge.resetpassword.frontend.CustomPluginUserSession;
 
 public class CustomLoginPlugin extends DefaultLoginPlugin {
 
-    private static final ResourceReference loginCss = new CssResourceReference(CustomLoginPlugin.class, "login_resetpassword.css");
+    private static final ResourceReference loginCss = new CssResourceReference(CustomLoginPlugin.class, "customloginplugin.css");
 
     public CustomLoginPlugin(final IPluginContext context, final IPluginConfig config) {
         super(context, config);
