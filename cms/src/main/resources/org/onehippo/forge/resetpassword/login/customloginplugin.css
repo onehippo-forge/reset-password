@@ -1,0 +1,12 @@
+.hippo-login-panel-center .hippo-login-form-label {
+  padding-top: 5px;
+}
+
+.hippo-login-panel-center .hippo-login-form-label .resetpassword-link {
+  margin-bottom: 4px;
+  display: inline-block;
+  cursor: pointer;
+}
+.resetpassword-link label{
+  cursor: pointer !important;
+}

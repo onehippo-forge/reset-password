@@ -15,16 +15,16 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -32,10 +32,11 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.UrlResourceReference;
 
+import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
@@ -56,11 +57,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ResetPassword extends RenderPlugin {
 
-    private static final long serialVersionUID = 1L;
-    private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
+    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
 
-    private static final ResourceReference DEFAULT_FAVICON = new UrlResourceReference(
-            Url.parse("../skin/images/hippo-cms.ico"));
+    private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
+    private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
     private static final String TERMS_AND_CONDITIONS_LINK = "https://www.bloomreach.com/en/about/privacy";
     private static final String PARAM_CODE = "code";
@@ -82,14 +82,10 @@ public class ResetPassword extends RenderPlugin {
         super(context, new JavaPluginConfig(config));
         configurationPath = config.getString("labels.location");
 
-        add(CssClass.append("hippo-login-plugin"));
+        add(CssClass.append("login-plugin"));
 
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
-
-        final Configuration configuration = getCustomPluginUserSession();
-        final Map<String, String> labelsMap = configuration != null ? configuration.getLabelMap() : new HashMap<>();
-        final int urlDuration = configuration != null ? configuration.getDurationsMap().get(Configuration.URL_VALIDITY_IN_MINUTES).intValue() : DEFAULT_URL_VALIDITY_IN_MINUTES;
 
         final IRequestParameters requestParameters = getRequest().getQueryParameters();
         final String code = requestParameters.getParameterValue(PARAM_CODE).toString();
@@ -98,6 +94,7 @@ public class ResetPassword extends RenderPlugin {
 
         final boolean autocomplete = getPluginConfig().getAsBoolean("signin.form.autocomplete", true);
 
+        final Configuration configuration = getConfiguration();
         final PanelInfo panelInfo = new PanelInfo(autocomplete, uid, configuration, context, config);
         final Panel resetPasswordForm = new ResetPasswordPanel(panelInfo);
         resetPasswordForm.setVisible(!hasParameters);
@@ -107,16 +104,7 @@ public class ResetPassword extends RenderPlugin {
         setPasswordForm.setVisible(hasParameters);
         add(setPasswordForm);
 
-        // In case of using a different edition, add extra CSS rules to show the required styling
-/*  FIXME no login_enterprise.css (yet?)
-        if (config.containsKey(EDITION)) {
-            final String edition = config.getString(EDITION);
-            editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
-        }
-*/
-
         final ExternalLink termsAndConditions = new ExternalLink("termsAndConditions", TERMS_AND_CONDITIONS_LINK) {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public boolean isVisible() {
@@ -134,6 +122,7 @@ public class ResetPassword extends RenderPlugin {
     @Override
     public final void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
+        response.render(CssHeaderItem.forReference(loginCss));
 
         response.render(LoginHeaderItem.get());
         if (editionCss != null) {
@@ -141,12 +130,13 @@ public class ResetPassword extends RenderPlugin {
         }
     }
 
-    private Configuration getCustomPluginUserSession() {
+    private Configuration getConfiguration() {
         final CustomPluginUserSession userSession = CustomPluginUserSession.get();
         final String cookieValue = getCookieValue(CustomPluginUserSession.LOCALE_COOKIE);
-        if(cookieValue != null) {
+        if (cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
+
         final Session session = userSession.getResetPasswordSession();
 
         try {
