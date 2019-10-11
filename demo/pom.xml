@@ -12,7 +12,7 @@
   <description>My Project</description>
   <groupId>org.example</groupId>
   <artifactId>myproject</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>4.0</version>
   <packaging>pom</packaging>
 
   <!-- 
@@ -61,7 +61,7 @@
   <properties>
 
     <!--Reset Password-->
-    <forge.resetpassword.version>3.2-SNAPSHOT</forge.resetpassword.version>
+    <forge.resetpassword.version>${project.version}</forge.resetpassword.version>
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
