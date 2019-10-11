@@ -16,9 +16,7 @@
 package org.onehippo.forge.resetpassword.services.mail;
 
 import org.apache.commons.mail.EmailException;
-import org.onehippo.cms7.services.SingletonService;
 
-@SingletonService
 public interface MailService {
     
     void sendMail(MailMessage mailMessage) throws EmailException;
