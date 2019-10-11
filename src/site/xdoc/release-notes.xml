@@ -30,6 +30,10 @@
           <th>BloomReach Experience Manager Release version</th>
         </tr>
         <tr>
+          <td>4.x</td>
+          <td>13.x</td>
+        </tr>
+        <tr>
           <td>3.x</td>
           <td>12.6</td>
         </tr>
@@ -44,6 +48,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="4.0">
+        <p class="smallinfo">Release Date: 11 October 2019</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-300">HIPFORGE-300</a><br/>
+            Upgrade to Bloomreach Experience Manager 13.</li>
+        </ul>
+      </subsection>
       <subsection name="3.1">
         <p class="smallinfo">Release Date: 19 June 2019</p>
         <ul>
@@ -54,7 +65,7 @@
       <subsection name="3.0">
         <p class="smallinfo">Release Date: 7 February 2019</p>
         <ul>
-          <li>Upgrade to BloomReach Experience 12.6</li>
+          <li>Upgrade to BloomReach Experience Manager 12.6</li>
           <li>Rename artifacts to have groupId <code>org.bloomreach.forge.resetpassword</code></li>
           <li>Add Essentials plugin for easy installation</li>
         </ul>
