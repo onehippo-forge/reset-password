@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>13.2.0</version>
+    <version>14.1.0</version>
   </parent>
 
   <name>BloomReach Reset Password</name>
@@ -23,26 +23,26 @@
   </organization>
 
   <properties>
-    <essentials.version>13.2.0</essentials.version>
-    <jackrabbit.version>2.16.2-h3</jackrabbit.version>
+    <essentials.version>14.1.0</essentials.version>
+    <jackrabbit.version>2.18.3-h2</jackrabbit.version>
 
-    <plugin.compiler.version>3.8.0</plugin.compiler.version>
+    <plugin.compiler.version>3.8.1</plugin.compiler.version>
     <plugin.clean.version>3.1.0</plugin.clean.version>
     <plugin.deploy.version>2.8.2</plugin.deploy.version>
     <plugin.install.version>2.5.2</plugin.install.version>
-    <plugin.jar.version>3.1.0</plugin.jar.version>
+    <plugin.jar.version>3.2.0</plugin.jar.version>
     <plugin.release.version>2.5.3</plugin.release.version>
     <plugin.resources.version>3.1.0</plugin.resources.version>
-    <plugin.site.version>3.7</plugin.site.version>
-    <plugin.source.version>3.0.1</plugin.source.version>
-    <plugin.surefire.version>3.0.0-M1</plugin.surefire.version>
+    <plugin.site.version>3.9.0</plugin.site.version>
+    <plugin.source.version>3.2.0</plugin.source.version>
+    <plugin.surefire.version>3.0.0-M3</plugin.surefire.version>
 
     <commons-email.version>1.5</commons-email.version>
     <geronimo.javamail.version>1.7.1</geronimo.javamail.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.javaVersion>1.8</project.build.javaVersion>
 
-    <jackson-jaxrs-json-provider.version>2.9.8</jackson-jaxrs-json-provider.version>
+    <jackson-jaxrs-json-provider.version>2.10.1</jackson-jaxrs-json-provider.version>
   </properties>
 
   <scm>

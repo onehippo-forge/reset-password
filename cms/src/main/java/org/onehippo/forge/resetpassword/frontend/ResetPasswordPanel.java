@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
+ *  Copyright 2008-2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,13 +42,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.hippoecm.frontend.attributes.ClassAttribute;
+import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.plugins.login.LoginResourceModel;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
+import org.hippoecm.frontend.session.LoginException;
+import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.util.WebApplicationHelper;
 import org.hippoecm.hst.util.HstRequestUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.resetpassword.services.mail.MailMessage;
 import org.onehippo.forge.resetpassword.services.mail.MailService;
+import org.onehippo.repository.security.JvmCredentials;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +71,6 @@ public class ResetPasswordPanel extends Panel {
 
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordPanel.class);
 
-
-
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private static final String SPACE = " ";
 
@@ -83,7 +86,7 @@ public class ResetPasswordPanel extends Panel {
     public ResetPasswordPanel(final PanelInfo panelInfo) {
         super("resetPasswordForm");
 
-        add(CssClass.append("login-panel-center"));
+        add(ClassAttribute.append("login-panel-center"));
         add(new ResetPasswordForm(panelInfo.isAutoComplete(), panelInfo.getUserId(), panelInfo.getConfiguration()));
     }
 
@@ -139,12 +142,13 @@ public class ResetPasswordPanel extends Panel {
          */
         @Override
         public final void onSubmit() {
-            final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-            final Session session = userSession.getResetPasswordSession();
 
             boolean resetSuccess = false;
             try {
-                if (resetPassword(session)) {
+                final PluginUserSession userSession = PluginUserSession.get();
+                final Session jcrSession = userSession.getJcrSession();
+
+                if (resetPassword(jcrSession)) {
                     resetSuccess = true;
                 }
             } catch (final PathNotFoundException ignore) {
@@ -153,14 +157,9 @@ public class ResetPasswordPanel extends Panel {
             } catch (final EmailException e) {
                 log.error("Sending mail failed.", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } catch (final RepositoryException re) {
-                log.error("RepositoryException.", re);
+            } catch (final RepositoryException e) {
+                log.error("RepositoryException.", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } finally {
-                if (session != null) {
-                    session.logout();
-                    userSession.removeResetPasswordSession();
-                }
             }
 
             if (resetSuccess) {

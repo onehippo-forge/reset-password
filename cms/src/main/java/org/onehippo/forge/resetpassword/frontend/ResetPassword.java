@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
+ *  Copyright 2008-2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,20 +31,23 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
+
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
-import org.hippoecm.frontend.Main;
+import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
-import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
+import org.hippoecm.frontend.plugins.login.LoginPlugin;
+import org.hippoecm.frontend.service.WicketFaviconService;
 import org.hippoecm.frontend.service.render.RenderPlugin;
+import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
+
+import org.onehippo.cms7.services.HippoServiceRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,23 +56,23 @@ import org.slf4j.LoggerFactory;
  * ResetPassword class for all Wicket based front-end code.
  * Calls @Link{ResetPasswordPanel} and @Link{SetPasswordPanel} as sub panels.
  *
- * Based on @Link{SimpleLoginPlugin} and @Link{LoginPlugin}.
+ * Based on @Link{DefaultLoginPlugin} and @Link{LoginPlugin}.
  */
 public class ResetPassword extends RenderPlugin {
 
-    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
-
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
-    private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
-    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.bloomreach.com/en/about/privacy";
+    private static final String TERMS_AND_CONDITIONS_LINK = LoginPlugin.TERMS_AND_CONDITIONS_LINK;
+
     private static final String PARAM_CODE = "code";
     private static final String PARAM_UID = "uid";
 
-    private static final int DEFAULT_URL_VALIDITY_IN_MINUTES = 60;
-
     private static final String EDITION = "edition";
+    private static final String AUTOCOMPLETE = "signin.form.autocomplete";
+
     private ResourceReference editionCss;
+
+    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
 
     private final String configurationPath;
 
@@ -79,28 +82,36 @@ public class ResetPassword extends RenderPlugin {
      * @param config plugin config
      */
     public ResetPassword(final IPluginContext context, final IPluginConfig config) {
-        super(context, new JavaPluginConfig(config));
+        super(context, config);
+
         configurationPath = config.getString("labels.location");
 
-        add(CssClass.append("login-plugin"));
+        add(ClassAttribute.append("login-plugin"));
 
         add(new Label("pageTitle", getString("page.title")));
-        add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
+        final WicketFaviconService wicketFaviconService = HippoServiceRegistry.getService(WicketFaviconService.class);
+        final ResourceReference iconReference = wicketFaviconService.getFaviconResourceReference();
+        add(new ResourceLink("faviconLink", iconReference));
+
+        if (config.containsKey(EDITION)) {
+            final String edition = config.getString(EDITION);
+            editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
+        }
 
         final IRequestParameters requestParameters = getRequest().getQueryParameters();
         final String code = requestParameters.getParameterValue(PARAM_CODE).toString();
         final String uid = requestParameters.getParameterValue(PARAM_UID).toString();
         final boolean hasParameters = StringUtils.isNotEmpty(code) && StringUtils.isNotEmpty(uid);
 
-        final boolean autocomplete = getPluginConfig().getAsBoolean("signin.form.autocomplete", true);
+        final boolean autocomplete = getPluginConfig().getAsBoolean(AUTOCOMPLETE, true);
 
         final Configuration configuration = getConfiguration();
         final PanelInfo panelInfo = new PanelInfo(autocomplete, uid, configuration, context, config);
-        final Panel resetPasswordForm = new ResetPasswordPanel(panelInfo);
+        final Panel resetPasswordForm = createResetPasswordPanel(panelInfo);
         resetPasswordForm.setVisible(!hasParameters);
         add(resetPasswordForm);
 
-        final Panel setPasswordForm = new SetPasswordPanel(panelInfo, code, resetPasswordForm);
+        final Panel setPasswordForm = createSetPasswordPanel(panelInfo, code, resetPasswordForm);
         setPasswordForm.setVisible(hasParameters);
         add(setPasswordForm);
 
@@ -115,13 +126,22 @@ public class ResetPassword extends RenderPlugin {
         add(termsAndConditions);
     }
 
+    protected Panel createResetPasswordPanel(final PanelInfo panelInfo) {
+        return new ResetPasswordPanel(panelInfo);
+    }
+
+    protected Panel createSetPasswordPanel(final PanelInfo panelInfo, final String code, final Panel resetPasswordForm) {
+        return new SetPasswordPanel(panelInfo, code, resetPasswordForm);
+    }
+
     /**
      * Checks if enterprise css should be added.
      * @param response response
      */
     @Override
-    public final void renderHead(final IHeaderResponse response) {
+    public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
+
         response.render(CssHeaderItem.forReference(loginCss));
 
         response.render(LoginHeaderItem.get());
@@ -131,26 +151,21 @@ public class ResetPassword extends RenderPlugin {
     }
 
     private Configuration getConfiguration() {
-        final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-        final String cookieValue = getCookieValue(CustomPluginUserSession.LOCALE_COOKIE);
+        final PluginUserSession userSession = PluginUserSession.get();
+        final String cookieValue = getCookieValue(ResetPasswordConst.LOCALE_COOKIE);
         if (cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
 
-        final Session session = userSession.getResetPasswordSession();
-
         try {
+            Session jcrSession = userSession.getJcrSession();
 
-            final Node configNode = session.getNode(configurationPath);
+            final Node configNode = jcrSession.getNode(configurationPath);
             return new Configuration(configNode);
         } catch (final RepositoryException re) {
-            log.error("Error trying to fetch configuration node", re);
-            throw new IllegalStateException("Failed to read configuration from resetpassword JCR session");
-        } finally {
-            if (session != null) {
-                session.logout();
-                userSession.removeResetPasswordSession();
-            }
+            log.error("Error trying to fetch configuration node {} from JCR session {}", configurationPath, ResetPasswordMain.USER_RESETPASSWORD, re);
+            throw new IllegalStateException("Failed to read configuration " + configurationPath +
+                    " from JCR session " + ResetPasswordMain.USER_RESETPASSWORD);
         }
     }
 

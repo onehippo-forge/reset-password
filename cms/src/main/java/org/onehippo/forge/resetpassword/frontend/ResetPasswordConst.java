@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 BloomReach Inc. (https://www.bloomreach.com)
+ * Copyright 2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ public final class ResetPasswordConst {
     public static final String PASSWORD_RESET_KEY = "passwordResetKey";
     public static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
     public static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
-    
+
+    public static final String LOCALE_COOKIE = "loc";
+    public static final int LOCALE_COOKIE_MAXAGE = 365 * 24 * 3600; // expire one year from now
 
     private ResetPasswordConst() {
     }

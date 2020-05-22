@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016-2019 BloomReach, Inc.
+    Copyright 2016-2020 Bloomreach, Inc.
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -27,7 +27,11 @@
       <table>
         <tr>
           <th>Plugin version</th>
-          <th>BloomReach Experience Manager Release version</th>
+          <th>Bloomreach Experience Manager Release version</th>
+        </tr>
+        <tr>
+          <td>5.x</td>
+          <td>14.x</td>
         </tr>
         <tr>
           <td>4.x</td>
@@ -48,6 +52,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="5.0">
+        <p class="smallinfo">Release Date: X June 2020</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-348">HIPFORGE-348</a><br/>
+            Upgrade to Bloomreach Experience Manager 14.</li>
+        </ul>
+      </subsection>
       <subsection name="4.0">
         <p class="smallinfo">Release Date: 11 October 2019</p>
         <ul>
@@ -65,7 +76,7 @@
       <subsection name="3.0">
         <p class="smallinfo">Release Date: 7 February 2019</p>
         <ul>
-          <li>Upgrade to BloomReach Experience Manager 12.6</li>
+          <li>Upgrade to Bloomreach Experience Manager 12.6</li>
           <li>Rename artifacts to have groupId <code>org.bloomreach.forge.resetpassword</code></li>
           <li>Add Essentials plugin for easy installation</li>
         </ul>
