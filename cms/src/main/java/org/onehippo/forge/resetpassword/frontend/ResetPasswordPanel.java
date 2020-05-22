@@ -42,8 +42,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugins.login.LoginResourceModel;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.util.WebApplicationHelper;
 import org.hippoecm.hst.util.HstRequestUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
@@ -83,7 +83,7 @@ public class ResetPasswordPanel extends Panel {
     public ResetPasswordPanel(final PanelInfo panelInfo) {
         super("resetPasswordForm");
 
-        add(CssClass.append("login-panel-center"));
+        add(ClassAttribute.append("login-panel-center"));
         add(new ResetPasswordForm(panelInfo.isAutoComplete(), panelInfo.getUserId(), panelInfo.getConfiguration()));
     }
 

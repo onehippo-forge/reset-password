@@ -37,11 +37,11 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 import org.hippoecm.frontend.Main;
+import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
@@ -82,7 +82,7 @@ public class ResetPassword extends RenderPlugin {
         super(context, new JavaPluginConfig(config));
         configurationPath = config.getString("labels.location");
 
-        add(CssClass.append("login-plugin"));
+        add(ClassAttribute.append("login-plugin"));
 
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));

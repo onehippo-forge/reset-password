@@ -42,14 +42,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.model.JcrNodeModel;
+import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationServiceImpl;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
 import org.hippoecm.frontend.plugins.cms.admin.users.User;
 import org.hippoecm.frontend.plugins.login.LoginResourceModel;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
+import org.hippoecm.frontend.session.LoginException;
+import org.hippoecm.frontend.session.PluginUserSession;
+import org.onehippo.repository.security.JvmCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +90,7 @@ public class SetPasswordPanel extends Panel {
         labelMap = panelInfo.getConfiguration().getLabelMap();
         urlValidity = panelInfo.getConfiguration().getDurationsMap().get(Configuration.URL_VALIDITY_IN_MINUTES).intValue();
 
-        add(CssClass.append("hippo-login-panel-center"));
+        add(ClassAttribute.append("hippo-login-panel-center"));
         add(new SetPasswordForm(panelInfo, code, resetPasswordPanel));
         String passwordValidationLocation = panelInfo.getConfig().get(PASSWORDVALIDATION_LOCATION).toString();
         JcrPluginConfig pluginConfig = new JcrPluginConfig(new JcrNodeModel(passwordValidationLocation));
@@ -186,6 +190,8 @@ public class SetPasswordPanel extends Panel {
             validateForm(code, uid);
 
             try {
+                //Option 1 : login the resetpassword user and release the session at the end.
+                PluginUserSession.get().login(new UserCredentials(JvmCredentials.getCredentials("resetpassword")));
                 // validate password
                 final User user = new User(uid);
                 final List<PasswordValidationStatus> statuses =
@@ -198,6 +204,16 @@ public class SetPasswordPanel extends Panel {
             } catch (final RepositoryException re) {
                 log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
+            } catch (LoginException e) {
+                e.printStackTrace();
+            } finally {
+                //TODO
+                // Clears completely the state of the application - feedback messages are never visible
+                 PluginUserSession.get().logout();
+                //None of the below actually clears the resetpassword session.
+//                PluginUserSession.get().releaseJcrSession();
+//                PluginUserSession.get().detach();
+//                PluginUserSession.get().flush();
             }
         }
 
