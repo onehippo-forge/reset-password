@@ -1,0 +1,17 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:users/test:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:email: test@bloomreach.com
+      hipposys:firstname: Test
+      hipposys:lastname: Test
+      hipposys:password: $SHA-256$SVE+vNPghdE=$pX53MB0fQcKp4X3w90FoMiG28bOVHWGUeWfGhPzek2w=
+      hipposys:passwordlastmodified: 2020-05-22T17:08:11.398+02:00
+      hipposys:securityprovider: internal
+      jcr:mixinTypes: ['hippostd:relaxed']
+      hipposys:previouspasswords: [$SHA-256$XsKZ73JwiBM=$ZQX6ndVeZQKNi075wCpjy3kW6QtqSPRmRrmwURsG/F8=,
+        $SHA-256$/7bdHMO2TsQ=$9H3geEEn1BxxzBbFBSptz6BTyje/s7hghRvcEODU2Kc=, $SHA-256$6xQMTTpN+BQ=$da0DsxTDuuUVDnkwadmKMlTyqE5yvI8PsG3qTXhOkbQ=,
+        $SHA-256$WfPucAuDuhA=$fX30SIGxvRcZTpP9IpeW8ic5t+0r3x0PrimarmtbXoI=, $SHA-256$i1lf4vfsWLw=$EqSjEoEY+TwVpZKshqJfhY9uKmCbimpRwy90cXj/v1U=,
+        $SHA-256$Pq3f46DUlt0=$UFOfmNtnl1AiquzPf7+T2CvcHkkepYKVeNnJG1bqSv4=, $SHA-256$VKBAsRSYnKM=$WA9ZrL7QHYKFi02TrD8wlbzUZU7SW4MIu1unFeK1W44=,
+        $SHA-256$UqLEZpedGvs=$nAD6EEHCNsIhcMmc+bB6hYIpMx/QGApQMy3/CYcHdkk=]

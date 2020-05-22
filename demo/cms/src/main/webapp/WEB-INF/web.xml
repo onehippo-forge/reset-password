@@ -100,7 +100,7 @@
     </init-param>
   </filter>
 
-  <!--Reset Password-->
+  <!--Reset password-->
   <filter>
     <filter-name>ResetPassword</filter-name>
     <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -126,7 +126,6 @@
     <filter-name>ResetPassword</filter-name>
     <url-pattern>/resetpassword/*</url-pattern>
   </filter-mapping>
-  <!--Reset Password-->
 
   <filter-mapping>
     <filter-name>ConcurrentLogin</filter-name>
