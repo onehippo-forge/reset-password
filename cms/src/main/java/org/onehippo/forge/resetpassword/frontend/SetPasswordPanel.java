@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
+ *  Copyright 2008-2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -333,11 +333,6 @@ public class SetPasswordPanel extends Panel {
                 throw new ResetPasswordException(
                         "Verification code passed in the url does not equal the persisted verification code");
             }
-        }
-
-        private void addLabelledComponent(final WebMarkupContainer container, final Component component) {
-            component.setOutputMarkupId(true);
-            container.add(component);
         }
 
         private void addAjaxAttributeModifier(final Component component, final String name, final IModel<String> value) {
