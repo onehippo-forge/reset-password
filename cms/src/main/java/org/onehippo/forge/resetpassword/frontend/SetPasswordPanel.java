@@ -190,7 +190,6 @@ public class SetPasswordPanel extends Panel {
             validateForm(code, uid);
 
             try {
-                //Option 1 : login the resetpassword user and release the session at the end.
                 PluginUserSession.get().login(new UserCredentials(JvmCredentials.getCredentials("resetpassword")));
                 // validate password
                 final User user = new User(uid);
@@ -206,14 +205,6 @@ public class SetPasswordPanel extends Panel {
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } catch (LoginException e) {
                 e.printStackTrace();
-            } finally {
-                //TODO
-                // Clears completely the state of the application - feedback messages are never visible
-                 PluginUserSession.get().logout();
-                //None of the below actually clears the resetpassword session.
-//                PluginUserSession.get().releaseJcrSession();
-//                PluginUserSession.get().detach();
-//                PluginUserSession.get().flush();
             }
         }
 
@@ -254,6 +245,7 @@ public class SetPasswordPanel extends Panel {
                 log.error("Error saving password SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
             } finally {
+                PluginUserSession.get().logout();
                 if (session != null) {
                     session.logout();
                     userSession.removeResetPasswordSession();

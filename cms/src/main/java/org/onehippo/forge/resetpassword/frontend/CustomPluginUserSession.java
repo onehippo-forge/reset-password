@@ -19,7 +19,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.QueryManager;
 
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Request;
 import org.hippoecm.frontend.PluginApplication;
 import org.hippoecm.frontend.model.JcrSessionModel;
@@ -44,7 +43,6 @@ public class CustomPluginUserSession extends PluginUserSession {
 
     private static final String USER_RESETPASSWORD = "resetpassword";
     private Session currentSession;
-    private IModel<Session> jcrSessionModel;
     public static final String LOCALE_COOKIE = "loc";
     public static final int LOCALE_COOKIE_MAXAGE = 365 * 24 * 3600; // expire one year from now
 
@@ -87,8 +85,6 @@ public class CustomPluginUserSession extends PluginUserSession {
         final JcrSessionModel sessionModel = new JcrSessionModel(new UserCredentials(
                 JvmCredentials.getCredentials(USER_RESETPASSWORD)));
         currentSession = sessionModel.getSession();
-        //Option 2 : shadow the private jcrSessionModel property of PluginUserSession and clean it on removeResetPasswordSession.
-        jcrSessionModel = sessionModel;
         return currentSession;
     }
 
@@ -97,7 +93,6 @@ public class CustomPluginUserSession extends PluginUserSession {
      */
     public void removeResetPasswordSession() {
         currentSession = null;
-        jcrSessionModel = null;
     }
 
     /**
