@@ -5,4 +5,4 @@ definitions:
         .meta:category: system
         .meta:add-new-system-values: true
         type: string
-        value: [lef, resetpassword]
+        value: [test, resetpassword]
