@@ -42,18 +42,17 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+
 import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.model.JcrNodeModel;
-import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationServiceImpl;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
 import org.hippoecm.frontend.plugins.cms.admin.users.User;
 import org.hippoecm.frontend.plugins.login.LoginResourceModel;
-import org.hippoecm.frontend.session.LoginException;
 import org.hippoecm.frontend.session.PluginUserSession;
-import org.onehippo.repository.security.JvmCredentials;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,7 +188,6 @@ public class SetPasswordPanel extends Panel {
 
             try {
                 final PluginUserSession userSession = PluginUserSession.get();
-                userSession.login();
                 final Session jcrSession = userSession.getJcrSession();
 
                 validateUid(code, uid, jcrSession);
@@ -207,8 +205,6 @@ public class SetPasswordPanel extends Panel {
             } catch (final RepositoryException re) {
                 log.error("Error validating SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } finally {
-                PluginUserSession.get().logout();
             }
         }
 
@@ -216,11 +212,8 @@ public class SetPasswordPanel extends Panel {
         protected final void onSubmit() {
             super.onSubmit();
 
-            final PluginUserSession userSession = PluginUserSession.get();
-
             try {
-                userSession.login();
-                Session jcrSession = userSession.getJcrSession();
+                final Session jcrSession = PluginUserSession.get().getJcrSession();
 
                 final User user = new User(uid);
                 user.savePassword(password);
@@ -250,17 +243,13 @@ public class SetPasswordPanel extends Panel {
             } catch (final RepositoryException re) {
                 log.error("Error saving password SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } finally {
-                PluginUserSession.get().logout();
             }
         }
 
         private boolean validateForm(final String code, final String uid) {
 
             try {
-                final PluginUserSession userSession = PluginUserSession.get();
-                userSession.login();
-                final Session jcrSession = userSession.getJcrSession();
+                final Session jcrSession = PluginUserSession.get().getJcrSession();
 
                 if (validateUid(code, uid, jcrSession)) {
                     return false;
@@ -269,8 +258,6 @@ public class SetPasswordPanel extends Panel {
                 log.error("Error validating SetPasswordForm", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
                 return false;
-            } finally {
-                PluginUserSession.get().logout();
             }
             return true;
         }

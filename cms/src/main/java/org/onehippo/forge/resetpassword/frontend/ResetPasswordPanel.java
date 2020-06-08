@@ -146,7 +146,6 @@ public class ResetPasswordPanel extends Panel {
             boolean resetSuccess = false;
             try {
                 final PluginUserSession userSession = PluginUserSession.get();
-                userSession.login();
                 final Session jcrSession = userSession.getJcrSession();
 
                 if (resetPassword(jcrSession)) {
@@ -161,8 +160,6 @@ public class ResetPasswordPanel extends Panel {
             } catch (final RepositoryException e) {
                 log.error("RepositoryException.", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } finally {
-                PluginUserSession.get().logout();
             }
 
             if (resetSuccess) {

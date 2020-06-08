@@ -38,20 +38,15 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.attributes.ClassAttribute;
-import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
 import org.hippoecm.frontend.service.render.RenderPlugin;
-import org.hippoecm.frontend.session.LoginException;
 import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
 
-import org.onehippo.repository.security.JvmCredentials;
-
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,7 +147,6 @@ public class ResetPassword extends RenderPlugin {
         }
 
         try {
-            userSession.login();
             Session jcrSession = userSession.getJcrSession();
 
             final Node configNode = jcrSession.getNode(configurationPath);
@@ -161,9 +155,6 @@ public class ResetPassword extends RenderPlugin {
             log.error("Error trying to fetch configuration node {} from JCR session {}", configurationPath, ResetPasswordMain.USER_RESETPASSWORD, re);
             throw new IllegalStateException("Failed to read configuration " + configurationPath +
                     " from JCR session " + ResetPasswordMain.USER_RESETPASSWORD);
-        } finally {
-            log.debug("Logging out from JCR session for {}", ResetPasswordMain.USER_RESETPASSWORD);
-            PluginUserSession.get().logout();
         }
     }
 

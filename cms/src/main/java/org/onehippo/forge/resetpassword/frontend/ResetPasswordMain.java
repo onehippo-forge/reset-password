@@ -15,38 +15,12 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
-
-import org.hippoecm.frontend.Main;
-import org.hippoecm.frontend.model.UserCredentials;
-import org.hippoecm.frontend.session.PluginUserSession;
-import org.hippoecm.frontend.session.UserSession;
-
-import org.onehippo.repository.security.JvmCredentials;
+import org.hippoecm.frontend.session.BaseResetPasswordMain;
 
 /**
  * Main class to start wicket code for ResetPassword page.
  */
-public class ResetPasswordMain extends Main {
-
-    public static final String USER_RESETPASSWORD = "resetpassword";
-
-    @Override
-    public UserSession newSession(final Request request, final Response response) {
-
-        return new PluginUserSession(request) {
-            @Override
-            public UserCredentials getUserCredentials() {
-                return new UserCredentials(JvmCredentials.getCredentials(USER_RESETPASSWORD));
-            }
-
-            @Override
-            protected UserCredentials getUserCredentialsFromRequestAttribute() {
-                return new UserCredentials(JvmCredentials.getCredentials(USER_RESETPASSWORD));
-            }
-        };
-    }
+public class ResetPasswordMain extends BaseResetPasswordMain {
 
     @Override
     public String getPluginApplicationName() {
