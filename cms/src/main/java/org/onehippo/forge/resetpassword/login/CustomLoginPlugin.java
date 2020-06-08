@@ -27,7 +27,7 @@ import org.hippoecm.frontend.plugins.login.DefaultLoginPlugin;
 import org.hippoecm.frontend.plugins.login.LoginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHandler;
 import org.hippoecm.frontend.plugins.login.LoginPanel;
-import org.onehippo.forge.resetpassword.frontend.CustomPluginUserSession;
+import org.onehippo.forge.resetpassword.frontend.ResetPasswordConst;
 
 public class CustomLoginPlugin extends DefaultLoginPlugin {
 
@@ -54,7 +54,7 @@ public class CustomLoginPlugin extends DefaultLoginPlugin {
             super(id, config, handler);
             form.addLabelledComponent(new Label("forgot-password-label", new ResourceModel("forgot.password.label")));
 
-            setCookieValue(CustomPluginUserSession.LOCALE_COOKIE, selectedLocale, CustomPluginUserSession.LOCALE_COOKIE_MAXAGE);
+            setCookieValue(ResetPasswordConst.LOCALE_COOKIE, selectedLocale, ResetPasswordConst.LOCALE_COOKIE_MAXAGE);
         }
 
         @Override

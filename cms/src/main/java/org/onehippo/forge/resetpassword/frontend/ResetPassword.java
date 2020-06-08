@@ -38,14 +38,20 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.attributes.ClassAttribute;
+import org.hippoecm.frontend.model.UserCredentials;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
 import org.hippoecm.frontend.service.render.RenderPlugin;
+import org.hippoecm.frontend.session.LoginException;
+import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
 
+import org.onehippo.repository.security.JvmCredentials;
+
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,11 +102,11 @@ public class ResetPassword extends RenderPlugin {
 
         final Configuration configuration = getConfiguration();
         final PanelInfo panelInfo = new PanelInfo(autocomplete, uid, configuration, context, config);
-        final Panel resetPasswordForm = new ResetPasswordPanel(panelInfo);
+        final Panel resetPasswordForm = createResetPasswordPanel(panelInfo);
         resetPasswordForm.setVisible(!hasParameters);
         add(resetPasswordForm);
 
-        final Panel setPasswordForm = new SetPasswordPanel(panelInfo, code, resetPasswordForm);
+        final Panel setPasswordForm = createSetPasswordPanel(panelInfo, code, resetPasswordForm);
         setPasswordForm.setVisible(hasParameters);
         add(setPasswordForm);
 
@@ -113,6 +119,14 @@ public class ResetPassword extends RenderPlugin {
         };
         termsAndConditions.setOutputMarkupId(true);
         add(termsAndConditions);
+    }
+
+    protected Panel createResetPasswordPanel(final PanelInfo panelInfo) {
+        return new ResetPasswordPanel(panelInfo);
+    }
+
+    protected Panel createSetPasswordPanel(final PanelInfo panelInfo, final String code, final Panel resetPasswordForm) {
+        return new SetPasswordPanel(panelInfo, code, resetPasswordForm);
     }
 
     /**
@@ -131,26 +145,25 @@ public class ResetPassword extends RenderPlugin {
     }
 
     private Configuration getConfiguration() {
-        final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-        final String cookieValue = getCookieValue(CustomPluginUserSession.LOCALE_COOKIE);
+        final PluginUserSession userSession = PluginUserSession.get();
+        final String cookieValue = getCookieValue(ResetPasswordConst.LOCALE_COOKIE);
         if (cookieValue != null) {
             userSession.setLocale(new Locale(cookieValue));
         }
 
-        final Session session = userSession.getResetPasswordSession();
-
         try {
+            userSession.login();
+            Session jcrSession = userSession.getJcrSession();
 
-            final Node configNode = session.getNode(configurationPath);
+            final Node configNode = jcrSession.getNode(configurationPath);
             return new Configuration(configNode);
         } catch (final RepositoryException re) {
-            log.error("Error trying to fetch configuration node", re);
-            throw new IllegalStateException("Failed to read configuration from resetpassword JCR session");
+            log.error("Error trying to fetch configuration node {} from JCR session {}", configurationPath, ResetPasswordMain.USER_RESETPASSWORD, re);
+            throw new IllegalStateException("Failed to read configuration " + configurationPath +
+                    " from JCR session " + ResetPasswordMain.USER_RESETPASSWORD);
         } finally {
-            if (session != null) {
-                session.logout();
-                userSession.removeResetPasswordSession();
-            }
+            log.debug("Logging out from JCR session for {}", ResetPasswordMain.USER_RESETPASSWORD);
+            PluginUserSession.get().logout();
         }
     }
 

@@ -22,7 +22,9 @@ public final class ResetPasswordConst {
     public static final String PASSWORD_RESET_KEY = "passwordResetKey";
     public static final String PASSWORD_RESET_TIMESTAMP = "passwordResetTimestamp";
     public static final String HIPPO_USERS_PATH = "/hippo:configuration/hippo:users/";
-    
+
+    public static final String LOCALE_COOKIE = "loc";
+    public static final int LOCALE_COOKIE_MAXAGE = 365 * 24 * 3600; // expire one year from now
 
     private ResetPasswordConst() {
     }
