@@ -52,6 +52,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="5.0">
+        <p class="smallinfo">Release Date: X June 2020</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-348">HIPFORGE-348</a><br/>
+            Upgrade to Bloomreach Experience Manager 14.</li>
+        </ul>
+      </subsection>
       <subsection name="4.0">
         <p class="smallinfo">Release Date: 11 October 2019</p>
         <ul>
