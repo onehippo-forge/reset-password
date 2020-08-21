@@ -20,11 +20,9 @@ import java.util.Locale;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,18 +33,17 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-
 import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
+import org.hippoecm.frontend.plugins.login.LoginPlugin;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +84,11 @@ public class ResetPassword extends RenderPlugin {
 
         add(new Label("pageTitle", getString("page.title")));
         add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
+
+        if (config.containsKey(EDITION)) {
+            final String edition = config.getString(EDITION);
+            editionCss = new CssResourceReference(LoginPlugin.class, "login_" + edition + ".css");
+        }
 
         final IRequestParameters requestParameters = getRequest().getQueryParameters();
         final String code = requestParameters.getParameterValue(PARAM_CODE).toString();
