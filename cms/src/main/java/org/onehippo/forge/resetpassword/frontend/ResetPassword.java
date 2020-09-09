@@ -20,6 +20,7 @@ import java.util.Locale;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,20 +34,20 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
-import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
-import org.hippoecm.frontend.plugin.config.impl.JavaPluginConfig;
 import org.hippoecm.frontend.plugins.login.LoginHeaderItem;
 import org.hippoecm.frontend.plugins.login.LoginPlugin;
+import org.hippoecm.frontend.service.WicketFaviconService;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
+
+import org.onehippo.cms7.services.HippoServiceRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ResetPassword extends RenderPlugin {
 
-    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
-
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
-    private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
     private static final String TERMS_AND_CONDITIONS_LINK = LoginPlugin.TERMS_AND_CONDITIONS_LINK;
 
@@ -74,6 +72,8 @@ public class ResetPassword extends RenderPlugin {
 
     private ResourceReference editionCss;
 
+    private static final ResourceReference loginCss = new CssResourceReference(ResetPassword.class, "resetpassword.css");
+
     private final String configurationPath;
 
     /**
@@ -82,13 +82,16 @@ public class ResetPassword extends RenderPlugin {
      * @param config plugin config
      */
     public ResetPassword(final IPluginContext context, final IPluginConfig config) {
-        super(context, new JavaPluginConfig(config));
+        super(context, config);
+
         configurationPath = config.getString("labels.location");
 
         add(ClassAttribute.append("login-plugin"));
 
         add(new Label("pageTitle", getString("page.title")));
-        add(new ResourceLink("faviconLink", DEFAULT_FAVICON));
+        final WicketFaviconService wicketFaviconService = HippoServiceRegistry.getService(WicketFaviconService.class);
+        final ResourceReference iconReference = wicketFaviconService.getFaviconResourceReference();
+        add(new ResourceLink("faviconLink", iconReference));
 
         if (config.containsKey(EDITION)) {
             final String edition = config.getString(EDITION);
@@ -136,8 +139,9 @@ public class ResetPassword extends RenderPlugin {
      * @param response response
      */
     @Override
-    public final void renderHead(final IHeaderResponse response) {
+    public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
+
         response.render(CssHeaderItem.forReference(loginCss));
 
         response.render(LoginHeaderItem.get());
