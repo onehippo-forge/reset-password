@@ -70,6 +70,7 @@ public class ResetPassword extends RenderPlugin {
     private static final String PARAM_UID = "uid";
 
     private static final String EDITION = "edition";
+    private static final String AUTOCOMPLETE = "signin.form.autocomplete";
 
     private ResourceReference editionCss;
 
@@ -99,7 +100,7 @@ public class ResetPassword extends RenderPlugin {
         final String uid = requestParameters.getParameterValue(PARAM_UID).toString();
         final boolean hasParameters = StringUtils.isNotEmpty(code) && StringUtils.isNotEmpty(uid);
 
-        final boolean autocomplete = getPluginConfig().getAsBoolean("signin.form.autocomplete", true);
+        final boolean autocomplete = getPluginConfig().getAsBoolean(AUTOCOMPLETE, true);
 
         final Configuration configuration = getConfiguration();
         final PanelInfo panelInfo = new PanelInfo(autocomplete, uid, configuration, context, config);
