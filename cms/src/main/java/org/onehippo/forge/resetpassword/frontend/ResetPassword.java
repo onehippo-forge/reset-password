@@ -23,16 +23,19 @@ import javax.jcr.Session;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
+
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+
 import org.hippoecm.frontend.Main;
 import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.plugin.IPluginContext;
@@ -44,6 +47,7 @@ import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.session.PluginUserSession;
 import org.hippoecm.frontend.usagestatistics.UsageStatisticsSettings;
 import org.hippoecm.frontend.util.WebApplicationHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * ResetPassword class for all Wicket based front-end code.
  * Calls @Link{ResetPasswordPanel} and @Link{SetPasswordPanel} as sub panels.
  *
- * Based on @Link{SimpleLoginPlugin} and @Link{LoginPlugin}.
+ * Based on @Link{DefaultLoginPlugin} and @Link{LoginPlugin}.
  */
 public class ResetPassword extends RenderPlugin {
 
@@ -60,13 +64,13 @@ public class ResetPassword extends RenderPlugin {
     private static final Logger log = LoggerFactory.getLogger(ResetPassword.class);
     private static final ResourceReference DEFAULT_FAVICON = new PackageResourceReference(Main.class, "cms-icon.png");
 
-    private static final String TERMS_AND_CONDITIONS_LINK = "https://www.bloomreach.com/en/about/privacy";
+    private static final String TERMS_AND_CONDITIONS_LINK = LoginPlugin.TERMS_AND_CONDITIONS_LINK;
+
     private static final String PARAM_CODE = "code";
     private static final String PARAM_UID = "uid";
 
-    private static final int DEFAULT_URL_VALIDITY_IN_MINUTES = 60;
-
     private static final String EDITION = "edition";
+
     private ResourceReference editionCss;
 
     private final String configurationPath;
