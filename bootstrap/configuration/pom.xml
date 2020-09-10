@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.resetpassword</groupId>
     <artifactId>resetpassword-bootstrap</artifactId>
-    <version>5.0</version>
+    <version>5.1-SNAPSHOT</version>
   </parent>
 
   <name>BloomReach Reset Password Bootstrap Configuration</name>

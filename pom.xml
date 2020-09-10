@@ -12,7 +12,7 @@
   <description>Hippo Reset Password</description>
   <groupId>org.bloomreach.forge.resetpassword</groupId>
   <artifactId>resetpassword</artifactId>
-  <version>5.0</version>
+  <version>5.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>https://github.com/bloomreach-forge/reset-password</url>
   <inceptionYear>2016</inceptionYear>

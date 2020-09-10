@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.bloomreach.forge.resetpassword</groupId>
     <artifactId>resetpassword</artifactId>
-    <version>5.0</version>
+    <version>5.1-SNAPSHOT</version>
   </parent>
 
   <name>BloomReach Reset Password CMS</name>
