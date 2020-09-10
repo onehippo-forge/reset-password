@@ -7,7 +7,7 @@ The Reset Password plugin provides basic reset password functionality.
 
 # Documentation (GitHub Pages)
 
-Documentation is available at [bloomreach-forge.github.io/reset-password/](https://bloomreach-forge.github.io/reset-password/).
+Documentation is available at [bloomreach-forge.github.io/reset-password/](https://bloomreach-forge.github.io/reset-password/)
 
 You can generate the GitHub pages only from ```master``` branch by this command:
 
@@ -30,7 +30,7 @@ and therefore ignored by Git.
      <dependency>
         <groupId>org.bloomreach.forge.resetpassword</groupId>
         <artifactId>reset-password-essentials</artifactId>
-        <version>3.1</version>       
+        <version>5.0</version>       
      </dependency>
 ```
  
