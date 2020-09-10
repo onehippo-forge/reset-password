@@ -5,21 +5,21 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>13.2.0</version>
+    <version>14.1.0</version>
   </parent>
 
   <name>My Project</name>
   <description>My Project</description>
   <groupId>org.example</groupId>
   <artifactId>myproject</artifactId>
-  <version>4.0</version>
+  <version>5.0</version>
   <packaging>pom</packaging>
 
-  <!-- 
+  <!--
     The below project elements are emptied/overridden as otherwise their metadata would be
     inherited or merged from the parent hippo-cms7-release pom (or its hippo-cms7-project pom).
 
-    DO NOT remove these tags but instead fill them in appropriately as needed, 
+    DO NOT remove these tags but instead fill them in appropriately as needed,
     UNLESS the inherited values are valid for your project.
   -->
   <url/>
@@ -60,13 +60,11 @@
 
   <properties>
 
-    <!--Reset Password-->
-    <forge.resetpassword.version>${project.version}</forge.resetpassword.version>
-
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
+    <forge.resetpassword.version>${project.version}</forge.resetpassword.version>
 
-    <essentials.version>13.2.0</essentials.version>
+    <essentials.version>14.1.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
     <taglibs.version>1.2.5</taglibs.version>
 
@@ -289,6 +287,16 @@
                     <file>${project.basedir}/conf/catalina-logging.properties</file>
                     <todir>conf/</todir>
                     <tofile>logging.properties</tofile>
+                  </configfile>
+                  <configfile>
+                    <file>${project.basedir}/conf/hst-dev.properties</file>
+                    <todir>conf/</todir>
+                    <tofile>hst.properties</tofile>
+                  </configfile>
+                  <configfile>
+                    <file>${project.basedir}/conf/platform-dev.properties</file>
+                    <todir>conf/</todir>
+                    <tofile>platform.properties</tofile>
                   </configfile>
                 </configfiles>
                 <files>

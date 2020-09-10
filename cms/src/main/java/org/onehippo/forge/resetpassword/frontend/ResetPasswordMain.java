@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
+ *  Copyright 2008-2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,25 +15,15 @@
  */
 package org.onehippo.forge.resetpassword.frontend;
 
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
-
-import org.hippoecm.frontend.Main;
+import org.hippoecm.frontend.session.BaseResetPasswordMain;
 
 /**
- * Custom class to start wicket code for ResetPassword page.
+ * Main class to start wicket code for ResetPassword page.
  */
-public class ResetPasswordMain extends Main {
+public class ResetPasswordMain extends BaseResetPasswordMain {
 
-    /**
-     * Create a new CustomPluginUserSession
-     * @param request request
-     * @param response response
-     * @return session for resetpassword
-     */
     @Override
-    public CustomPluginUserSession newSession(final Request request, final Response response) {
-        return new CustomPluginUserSession(request);
+    public String getPluginApplicationName() {
+        return getConfigurationParameter(PLUGIN_APPLICATION_NAME_PARAMETER, "resetpassword");
     }
-
 }

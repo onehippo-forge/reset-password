@@ -3,7 +3,7 @@
         "-//Apache Software Foundation//DTD XDOC 1.0//EN"
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2016-2019 BloomReach Inc. (https://www.bloomreach.com)
+    Copyright 2016-2020 Bloomreach Inc. (https://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 -->
 <document>
     <properties>
-        <title>BloomReach Experience Manager Reset Password</title>
+        <title>Bloomreach Experience Manager Reset Password</title>
     </properties>
     <body>
-        <section name="BloomReach Experience Manager Reset Password">
+        <section name="Bloomreach Experience Manager Reset Password">
             <p>
                 This project provides basic reset password functionality.
             </p>
@@ -52,7 +52,7 @@
      <dependency>
         <groupId>org.bloomreach.forge.resetpassword</groupId>
         <artifactId>reset-password-essentials</artifactId>
-        <version>3.1</version>
+        <version>5.0</version>
      </dependency>
         ]]></source>
                 </div>

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2019 BloomReach Inc. (https://www.bloomreach.com)
+ *  Copyright 2008-2020 Bloomreach Inc. (https://www.bloomreach.com)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+
+import org.hippoecm.frontend.attributes.ClassAttribute;
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.config.impl.JcrPluginConfig;
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.IPasswordValidationService;
@@ -49,7 +51,8 @@ import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValid
 import org.hippoecm.frontend.plugins.cms.admin.password.validation.PasswordValidationStatus;
 import org.hippoecm.frontend.plugins.cms.admin.users.User;
 import org.hippoecm.frontend.plugins.login.LoginResourceModel;
-import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
+import org.hippoecm.frontend.session.PluginUserSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +89,7 @@ public class SetPasswordPanel extends Panel {
         labelMap = panelInfo.getConfiguration().getLabelMap();
         urlValidity = panelInfo.getConfiguration().getDurationsMap().get(Configuration.URL_VALIDITY_IN_MINUTES).intValue();
 
-        add(CssClass.append("hippo-login-panel-center"));
+        add(ClassAttribute.append("hippo-login-panel-center"));
         add(new SetPasswordForm(panelInfo, code, resetPasswordPanel));
         String passwordValidationLocation = panelInfo.getConfig().get(PASSWORDVALIDATION_LOCATION).toString();
         JcrPluginConfig pluginConfig = new JcrPluginConfig(new JcrNodeModel(passwordValidationLocation));
@@ -183,11 +186,15 @@ public class SetPasswordPanel extends Panel {
                 error(labelMap.get(Configuration.PASSWORDS_DO_NOT_MATCH));
             }
 
-            validateForm(code, uid);
-
             try {
+                final PluginUserSession userSession = PluginUserSession.get();
+                final Session jcrSession = userSession.getJcrSession();
+
+                validateUid(code, uid, jcrSession);
+
                 // validate password
                 final User user = new User(uid);
+
                 final List<PasswordValidationStatus> statuses =
                         passwordValidationService.checkPassword(passwordField.getValue(), user);
                 for (final PasswordValidationStatus status : statuses) {
@@ -205,10 +212,9 @@ public class SetPasswordPanel extends Panel {
         protected final void onSubmit() {
             super.onSubmit();
 
-            final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-            Session session = null;
             try {
-                session = userSession.getResetPasswordSession();
+                final Session jcrSession = PluginUserSession.get().getJcrSession();
+
                 final User user = new User(uid);
                 user.savePassword(password);
                 info(labelMap.get(Configuration.PASSWORD_RESET_DONE));
@@ -216,7 +222,7 @@ public class SetPasswordPanel extends Panel {
                 setPasswordFormTable.setVisible(false);
                 loginLink.setVisible(true);
 
-                final Node userNode = session.getNode(HIPPO_USERS_PATH + uid);
+                final Node userNode = jcrSession.getNode(HIPPO_USERS_PATH + uid);
                 if (userNode == null) {
                     log.info("Unknown username: {}", uid);
                     error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
@@ -232,37 +238,26 @@ public class SetPasswordPanel extends Panel {
                 }
 
                 // persist code and exp.date
-                session.save();
+                jcrSession.save();
 
             } catch (final RepositoryException re) {
                 log.error("Error saving password SetPasswordForm", re);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
-            } finally {
-                if (session != null) {
-                    session.logout();
-                    userSession.removeResetPasswordSession();
-                }
             }
         }
 
         private boolean validateForm(final String code, final String uid) {
-            final CustomPluginUserSession userSession = CustomPluginUserSession.get();
-            Session session = null;
-            try {
-                session = userSession.getResetPasswordSession();
 
-                if (validateUid(code, uid, session)) {
+            try {
+                final Session jcrSession = PluginUserSession.get().getJcrSession();
+
+                if (validateUid(code, uid, jcrSession)) {
                     return false;
                 }
-            } catch (final RepositoryException re) {
-                log.error("Error validating SetPasswordForm", re);
+            } catch (final RepositoryException e) {
+                log.error("Error validating SetPasswordForm", e);
                 error(labelMap.get(Configuration.SYSTEM_ERROR));
                 return false;
-            } finally {
-                if (session != null) {
-                    session.logout();
-                    userSession.removeResetPasswordSession();
-                }
             }
             return true;
         }
@@ -279,11 +274,11 @@ public class SetPasswordPanel extends Panel {
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordException rpe) {
-                log.info("Error handling verification url: {}", rpe);
+                log.info("Error handling verification {}, {}", code, uid, rpe);
                 error(labelMap.get(Configuration.INFORMATION_INCOMPLETE));
                 return true;
             } catch (final ResetPasswordLinkExpiredException rpplee) {
-                log.info("Error handling verification url: {}", rpplee);
+                log.info("Error handling verification {}, {}", code, uid, rpplee);
                 error(labelMap.get(Configuration.RESET_LINK_EXPIRED));
                 return true;
             }
@@ -317,11 +312,6 @@ public class SetPasswordPanel extends Panel {
                 throw new ResetPasswordException(
                         "Verification code passed in the url does not equal the persisted verification code");
             }
-        }
-
-        private void addLabelledComponent(final WebMarkupContainer container, final Component component) {
-            component.setOutputMarkupId(true);
-            container.add(component);
         }
 
         private void addAjaxAttributeModifier(final Component component, final String name, final IModel<String> value) {
