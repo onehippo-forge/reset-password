@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.bloomreach.forge.resetpassword</groupId>
     <artifactId>resetpassword</artifactId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0</version>
   </parent>
 
   <name>BloomReach Reset Password Essentials Plugin</name>
